@@ -1,0 +1,1 @@
+# wc-custom-logo
