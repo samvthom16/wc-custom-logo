@@ -1,7 +1,8 @@
 <?php
 
 function wpdocs_selectively_enqueue_admin_script( $hook ) {
-  wp_enqueue_script( 'custom-js', plugins_url( 'wc-custom-logo/assets/js/resizable.min.js' , dirname(__FILE__) ) );
+  wp_enqueue_script( 'wc-logo-resizable', plugins_url( 'wc-custom-logo/assets/js/resizable.min.js' , dirname(__FILE__) ) );
+  wp_enqueue_script( 'wc-logo-draggable', plugins_url( 'wc-custom-logo/assets/js/draggable.min.js' , dirname(__FILE__) ) );
 }
 add_action( 'admin_enqueue_scripts', 'wpdocs_selectively_enqueue_admin_script' );
 
@@ -9,7 +10,7 @@ add_action('admin_head', 'misha_css_icon');
 function misha_css_icon(){
   echo '<style>
     #woocommerce-product-data ul.wc-tabs li.misha_options.misha_tab a:before{ content: "\f100"; }
-    #wc-customize-canvas{ text-align: center; }
+    #wc-customize-canvas{ text-align: center; position: relative; }
     #wc-customize-canvas img{ max-width: 100%; height: auto;}
     #resizeDiv{ border: #000 solid 1px; width: 100px; height: 100px; position: absolute; left:25%; top: 25%;}
   </style>';
@@ -19,6 +20,7 @@ add_action( 'admin_footer', function(){
   ?>
   <script>
     jQuery('#resizeDiv').draggable({
+      containment: "parent",
       drag: function( event, ui ){
         WCUpdateLogo( ui );
       }
