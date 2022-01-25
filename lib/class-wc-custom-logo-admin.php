@@ -38,25 +38,10 @@
     }
 
     function productDataPanelsHTML(){
-
-      global $post_id;
-      $dimensions = array(
-        'width' => 100,
-        'top'   => 100,
-        'left'  => 100
-      );
-
-      foreach( $dimensions as $key => $val ){
-        $option = get_post_meta( get_the_ID(), 'wc_logo_' . $key, true );
-        if( isset( $option ) ){
-          $dimensions[ $key ] = $option;
-        }
-      }
-
+      $post_id = get_the_ID();
+      $dimensions = wc_get_dimensions( $post_id );
       $custom_logo_placeholder_src = plugins_url( 'assets/images/custom-logo-placeholder.png' , dirname(__FILE__) );
-
       include "templates/product-data-panels.php";
-
     }
 
     /*
