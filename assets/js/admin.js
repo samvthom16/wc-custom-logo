@@ -1,24 +1,25 @@
 
-function WCUpdateLogo( ui ){
-
+function _WCGetPercentageLeftOfLogo( ui ){
   var image_width = jQuery('#wc-customize-canvas').width();
-  var image_height = jQuery('#wc-customize-canvas').height();
+  return ( ui.position.left / image_width ) * 100;
+}
 
+function _WCGetPercentageTopOfLogo( ui ){
+  var image_height = jQuery('#wc-customize-canvas').height();
+  return ( ui.position.top / image_height ) * 100;
+}
+
+function WCUpdateLogo( ui ){
   if( ui.size != undefined ){
+    var image_width = jQuery('#wc-customize-canvas').width();
     var percentage_width = ( ui.size.width/image_width ) * 100;
     jQuery( '#wc_logo_width' ).val( percentage_width );
   }
 
-  var image_left = jQuery('#wc-customize-canvas').position().left;
-  var percentage_left = ( ui.position.left / image_width ) * 100;
-  jQuery( '#wc_logo_left' ).val( percentage_left );
-
-  var image_top = jQuery('#wc-customize-canvas').position().top;
-  var percentage_top = ( ui.position.top / image_height ) * 100;
-  jQuery( '#wc_logo_top' ).val( percentage_top );
+  jQuery( '#wc_logo_left' ).val( _WCGetPercentageLeftOfLogo( ui ) );
+  jQuery( '#wc_logo_top' ).val( _WCGetPercentageTopOfLogo( ui ) );
 
   WCPositionResizeLogo();
-
 }
 
 function WCPositionResizeLogo(){
@@ -26,19 +27,31 @@ function WCPositionResizeLogo(){
   var top = jQuery('#wc_logo_top').val();
   var left = jQuery('#wc_logo_left').val();
 
-  jQuery('#resizeDiv').css( {
+  jQuery('#wc-customize-canvas .resize-logo').css( {
     top: top + '%',
     left: left + '%',
-    width: width + '%',
-    height: width + '%'
+    width: width + '%'
   } );
 }
 
 jQuery( document ).ready( function(){
-  jQuery('#resizeDiv').draggable({
+  jQuery('#wc-customize-canvas .resize-logo').draggable({
     containment: "parent",
+    drag: function( event, ui ){
+      var percentage_left = _WCGetPercentageLeftOfLogo( ui );
+      if( percentage_left > 40 && percentage_left < 60 ){
+        jQuery('#wc-customize-canvas .wc-vertical-line').show();
+      }
+
+      var percentage_top = _WCGetPercentageTopOfLogo( ui );
+      if( percentage_top > 40 && percentage_top < 60 ){
+        jQuery('#wc-customize-canvas .wc-horizontal-line').show();
+      }
+    },
     stop: function( event, ui ){
       WCUpdateLogo( ui );
+      jQuery('#wc-customize-canvas .wc-vertical-line').hide();
+      jQuery('#wc-customize-canvas .wc-horizontal-line').hide();
     }
   }).resizable({
     delay       : 300,

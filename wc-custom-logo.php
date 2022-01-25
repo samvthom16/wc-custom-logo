@@ -9,7 +9,7 @@
     */
 
 
-	//define( 'INPURSUIT_VERSION', time() );
+	define( 'WC_CUSTOM_LOGO_VERSION', time() );
 
   /**
   * Check if WooCommerce is active
@@ -21,7 +21,7 @@
 
 
 	$inc_files = array(
-    'class-wc-custom-logo-admin.php'
+    'lib/class-wc-custom-logo-admin.php'
 	);
 
 	foreach( $inc_files as $inc_file ){

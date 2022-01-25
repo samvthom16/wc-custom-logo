@@ -30,11 +30,11 @@
     }
 
     function loadAssets(){
-      wp_enqueue_script( 'wc-logo-resizable', plugins_url( 'wc-custom-logo/assets/js/resizable.min.js' , dirname(__FILE__) ) );
-      wp_enqueue_script( 'wc-logo-draggable', plugins_url( 'wc-custom-logo/assets/js/draggable.min.js' , dirname(__FILE__) ) );
-      wp_enqueue_script( 'wc-logo-admin', plugins_url( 'wc-custom-logo/assets/js/admin.js' , dirname(__FILE__) ) );
+      wp_enqueue_script( 'wc-logo-resizable', plugins_url( 'assets/js/resizable.min.js' , dirname(__FILE__) ), array(), WC_CUSTOM_LOGO_VERSION );
+      wp_enqueue_script( 'wc-logo-draggable', plugins_url( 'assets/js/draggable.min.js' , dirname(__FILE__) ), array(), WC_CUSTOM_LOGO_VERSION );
+      wp_enqueue_script( 'wc-logo-admin', plugins_url( 'assets/js/admin.js' , dirname(__FILE__) ), array(), WC_CUSTOM_LOGO_VERSION );
 
-      wp_enqueue_style( 'wc-logo-admin', plugins_url( 'wc-custom-logo/assets/css/admin.css' , dirname(__FILE__) ) );
+      wp_enqueue_style( 'wc-logo-admin', plugins_url( 'assets/css/admin.css' , dirname(__FILE__) ), array(), WC_CUSTOM_LOGO_VERSION );
     }
 
     function productDataPanelsHTML(){
@@ -53,35 +53,9 @@
         }
       }
 
-      echo '<div id="wc_custom_logo_container" class="panel woocommerce_options_panel hidden">';
+      $custom_logo_placeholder_src = plugins_url( 'assets/images/custom-logo-placeholder.png' , dirname(__FILE__) );
 
-      echo "<div id='wc-customize-canvas'>";
-      echo get_the_post_thumbnail( $post_id, 'large', array( 'class' => 'aligncenter' ) );
-      echo "<div id='resizeDiv'></div>";
-      echo "</div>";
-
-      woocommerce_wp_text_input( array(
-    		'id'                => 'wc_logo_width',
-    		'value'             => $dimensions['width'],
-    		'label'             => 'Width',
-    		'description'       => ''
-    	) );
-
-      woocommerce_wp_text_input( array(
-    		'id'                => 'wc_logo_top',
-    		'value'             => $dimensions['top'],
-    		'label'             => 'Top Position',
-    		'description'       => ''
-    	) );
-
-      woocommerce_wp_text_input( array(
-    		'id'                => 'wc_logo_left',
-    		'value'             => $dimensions['left'],
-    		'label'             => 'Left Position',
-    		'description'       => ''
-    	) );
-
-      echo '</div>';
+      include "templates/product-data-panels.php";
 
     }
 
