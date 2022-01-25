@@ -1,0 +1,4 @@
+#woocommerce-product-data ul.wc-tabs li.misha_options.misha_tab a:before{ content: "\f100"; }
+#wc-customize-canvas{ text-align: center; position: relative; line-height: 0;}
+#wc-customize-canvas img{ max-width: 100%; height: auto;}
+#resizeDiv{ border: #000 solid 1px; width: 100px; height: 100px; position: absolute; left:25%; top: 25%;}

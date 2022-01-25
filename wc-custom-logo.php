@@ -2,9 +2,9 @@
 	/*
     Plugin Name: WC Custom Logo
     Plugin URI: https://sputznik.com
-    Description:
+    Description: WooCommerce Add-on that allows customers to upload custom logo on the products
     Author: Samuel Thomas
-    Version: 1.0.1
+    Version: 1.0.0
     Author URI: https://sputznik.com
     */
 
@@ -21,7 +21,7 @@
 
 
 	$inc_files = array(
-    'woocommerce.php'
+    'class-wc-custom-logo-admin.php'
 	);
 
 	foreach( $inc_files as $inc_file ){
