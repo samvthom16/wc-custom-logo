@@ -1,9 +1,18 @@
 #woocommerce-product-data ul.wc-tabs li.misha_options.misha_tab a:before{ content: "\f100"; }
-#wc-customize-canvas{ text-align: center; position: relative; line-height: 0;}
-#wc-customize-canvas img{ max-width: 100%; height: auto;}
-#wc-customize-canvas .resize-logo{ width: 100px; height: auto; position: absolute; left: 0; top: 0; cursor: pointer;}
 
-#wc-customize-canvas .wc-vertical-line, #wc-customize-canvas .wc-horizontal-line{
+[data-behaviour~=wc-logo-customize]{ text-align: center; position: relative; line-height: 0;}
+[data-behaviour~=wc-logo-customize] img{ max-width: 100%; height: auto;}
+[data-behaviour~=wc-logo-customize] .resize-logo{ width: 100px; height: auto; position: absolute; left: 0; top: 0; cursor: pointer;}
+[data-behaviour~=wc-logo-customize] .resizer{ width: 10px; height: 10px; background: blue; position:absolute; right: 0; bottom: 0; cursor: se-resize; }
+
+.wc-logo-field{ display: inline-block; width: 100%; margin-top: 15px; }
+.wc-logo-field label{
+  display: block;
+  font-weight: bold;
+}
+.wc-logo-field input{ width: 100%; }
+
+[data-behaviour~=wc-logo-customize] .wc-vertical-line, [data-behaviour~=wc-logo-customize] .wc-horizontal-line{
   position: absolute;
   height: 100%;
   width: 100%;
@@ -12,14 +21,14 @@
   display: none;
 }
 
-#wc-customize-canvas .wc-vertical-line{
+[data-behaviour~=wc-logo-customize] .wc-vertical-line{
   border-left: red dotted 1px;
   width: 1px;
   left: 50%;
   transform: translateX(-50%);
 }
 
-#wc-customize-canvas .wc-horizontal-line{
+[data-behaviour~=wc-logo-customize] .wc-horizontal-line{
   border-top: red dotted 1px;
   height: 1px;
   top: 50%;

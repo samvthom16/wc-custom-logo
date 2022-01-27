@@ -31,7 +31,7 @@
 
   function wc_get_dimensions( $post_id ){
     $dimensions = array(
-      'width' => 0,
+      'width' => 10,
       'top'   => 0,
       'left'  => 0
     );

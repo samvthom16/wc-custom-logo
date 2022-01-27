@@ -1,40 +1,213 @@
 
-function _WCGetPercentageLeftOfLogo( ui ){
-  var image_width = jQuery('#wc-customize-canvas').width();
-  return ( ui.position.left / image_width ) * 100;
-}
 
-function _WCGetPercentageTopOfLogo( ui ){
-  var image_height = jQuery('#wc-customize-canvas').height();
-  return ( ui.position.top / image_height ) * 100;
-}
 
-function WCUpdateLogo( ui ){
-  if( ui.size != undefined ){
-    var image_width = jQuery('#wc-customize-canvas').width();
-    var percentage_width = ( ui.size.width/image_width ) * 100;
-    jQuery( '#wc_logo_width' ).val( percentage_width );
-  }
 
-  jQuery( '#wc_logo_left' ).val( _WCGetPercentageLeftOfLogo( ui ) );
-  jQuery( '#wc_logo_top' ).val( _WCGetPercentageTopOfLogo( ui ) );
 
-  WCPositionResizeLogo();
-}
 
-function WCPositionResizeLogo(){
-  var width = jQuery('#wc_logo_width').val();
-  var top = jQuery('#wc_logo_top').val();
-  var left = jQuery('#wc_logo_left').val();
 
-  jQuery('#wc-customize-canvas .resize-logo').css( {
-    top: top + '%',
-    left: left + '%',
-    width: width + '%'
+
+
+jQuery.fn.wc_logo_resize = function( options ){
+
+  var settings = jQuery.extend( {
+    stop: function(){}
+  }, options );
+
+  return this.each( function(){
+    var $el = jQuery( this ),
+      startX, startY, startWidth, startHeight;
+
+    function doDrag(e) {
+      $el[0].style.width = (startWidth + e.clientX - startX) + 'px';
+      $el[0].style.height = (startHeight + e.clientY - startY) + 'px';
+    }
+
+    function stopDrag(e) {
+      document.documentElement.removeEventListener( 'mousemove', doDrag, false );
+      document.documentElement.removeEventListener( 'mouseup', stopDrag, false );
+
+      var ui = {
+        size: {
+          width: parseInt( document.defaultView.getComputedStyle( $el[0] ).width ),
+        },
+        position: {
+          left: parseInt( document.defaultView.getComputedStyle( $el[0] ).left ),
+          top: parseInt( document.defaultView.getComputedStyle( $el[0] ).top )
+        }
+      };
+
+      settings.stop( ui );
+
+    }
+
+    var $resizer = jQuery( document.createElement('div') );
+    $resizer.addClass( 'resizer' );
+    $resizer.appendTo( $el );
+
+    $resizer.mousedown( function( ev ){
+      startX = ev.clientX;
+      startY = ev.clientY;
+      startWidth = parseInt( document.defaultView.getComputedStyle( $el[0] ).width, 10 );
+      //startHeight = parseInt( document.defaultView.getComputedStyle( $el[0] ).height, 10 );
+      document.documentElement.addEventListener( 'mousemove', doDrag, false);
+      document.documentElement.addEventListener( 'mouseup', stopDrag, false);
+    } );
   } );
-}
+};
+
+jQuery.fn.wc_logo_customise = function( options ) {
+
+  var settings = jQuery.extend( {
+    id: 0
+  }, options );
+
+  return this.each(function() {
+
+    /*
+    * CREATES THE NEW CUSTOM LOGO FOR RESIZE & DRAG
+    */
+    function createResizeLogo(){
+      var $resizeLogo = jQuery( document.createElement('div') );
+      var $img = jQuery( document.createElement( 'img' ) );
+      $resizeLogo.addClass( 'resize-logo' );
+      $img.attr( 'src', wc_defaults.logo );
+      $img.appendTo( $resizeLogo );
+      return $resizeLogo;
+    }
+
+    function getPercentageLeftOfLogo( ui ){
+      var image_width = $parent.width();
+      return ( ui.position.left / image_width ) * 100;
+    }
+
+    function getPercentageTopOfLogo( ui ){
+      var image_height = $parent.height();
+      return ( ui.position.top / image_height ) * 100;
+    }
+
+    function createInputElement( id, label, defaultValue ){
+
+      var valueFromDB = defaultValue;
+      if( window.browserData != undefined && window.browserData[ 'wc_logo' ] != undefined && window.browserData[ 'wc_logo' ][ settings.id ] != undefined ){
+        valueFromDB = window.browserData[ 'wc_logo' ][ settings.id ][ id ];
+      }
+
+      var $container = jQuery( document.createElement( 'div' ) );
+      $container.addClass( 'wc-logo-field' );
+
+      var $label = jQuery( document.createElement( 'label' ) );
+      $label.html( label );
+      $label.appendTo( $container );
+
+      var $input = jQuery( document.createElement('input') );
+      $input.attr( 'id', id );
+      $input.attr( 'name', 'wc_logo_dimensions[' + id + ']' );
+      $input.attr( 'type', 'number' );
+      $input.attr( 'step', 'any' );
+      $input.val( valueFromDB );
+      $input.appendTo( $container );
+      $input.blur( function( ev ){
+        repositionLogo();
+      } );
+      return $container;
+    }
+
+    var $el       = jQuery( this ),
+      $parent     = $el.parent(),
+      $grandparent = $parent.parent(),
+      $resizeLogo = createResizeLogo();
+
+    /*
+    * REPOSITION LOGO
+    */
+    function repositionLogo(){
+      var width = jQuery('#wc_logo_width').val();
+      var top = jQuery('#wc_logo_top').val();
+      var left = jQuery('#wc_logo_left').val();
+
+      $resizeLogo.css( {
+        top: top + '%',
+        left: left + '%',
+        width: width + '%'
+      } );
+    }
+
+    function updateLogo( ui ){
+      if( ui.size != undefined ){
+        var image_width = $parent.width();
+        var percentage_width = ( ui.size.width/image_width ) * 100;
+        jQuery( '#wc_logo_width' ).val( percentage_width );
+      }
+
+      jQuery( '#wc_logo_left' ).val( getPercentageLeftOfLogo( ui ) );
+      jQuery( '#wc_logo_top' ).val( getPercentageTopOfLogo( ui ) );
+
+      repositionLogo();
+    }
+
+    function createHelperDiv( newClass ){
+      var $div = jQuery( document.createElement( 'div' ) );
+      $div.addClass( newClass );
+      $div.appendTo( $parent );
+    }
+
+    /*
+    * INITIALISATION FUNCTION
+    */
+    function init(){
+      createInputElement( 'wc_logo_width', 'Width of New Logo', 10 ).appendTo( $grandparent );
+      createInputElement( 'wc_logo_top', 'Top Position of New Logo', 10 ).appendTo( $grandparent );
+      createInputElement( 'wc_logo_left', 'Left Position of New Logo', 10 ).appendTo( $grandparent );
+
+      createHelperDiv( 'wc-vertical-line' );
+      createHelperDiv( 'wc-horizontal-line' );
+
+      $parent.attr( 'data-behaviour', 'wc-logo-customize' );
+
+      $resizeLogo.appendTo( $parent );
+
+      $resizeLogo.draggable({
+        containment: "parent",
+        drag: function( event, ui ){
+          var percentage_left = getPercentageLeftOfLogo( ui );
+          var percentage_top = getPercentageTopOfLogo( ui );
+
+          if( percentage_left > 40 && percentage_left < 60 ){
+            $parent.find('.wc-vertical-line').show();
+          }
+
+          if( percentage_top > 40 && percentage_top < 60 ){
+            $parent.find('.wc-horizontal-line').show();
+          }
+        },
+        stop: function( event, ui ){
+          updateLogo( ui );
+          $parent.find('.wc-vertical-line').hide();
+          $parent.find('.wc-horizontal-line').hide();
+        }
+      }).wc_logo_resize( { stop: updateLogo } );
+      repositionLogo();
+    }
+
+
+    init();
+  } );
+};
 
 jQuery( document ).ready( function(){
+
+  var url_string = window.location;
+  var url = new URL(url_string);
+  var post_id = url.searchParams.get( "post" );
+
+  if( post_id ){
+    jQuery('body.post-type-attachment .wp_attachment_image img').wc_logo_customise( {
+      id: post_id
+    } );
+  }
+
+
+  /*
   jQuery('#wc-customize-canvas .resize-logo').draggable({
     containment: "parent",
     drag: function( event, ui ){
@@ -64,11 +237,10 @@ jQuery( document ).ready( function(){
       WCUpdateLogo( ui );
     }
   });
+  */
 
-  jQuery( '#wc_logo_top, #wc_logo_left, #wc_logo_width' ).blur( function( ev ){
-    WCPositionResizeLogo();
-  } );
+
 
   // INIT FOR THE FIRST TIME
-  WCPositionResizeLogo();
+  //WCPositionResizeLogo();
 } );
