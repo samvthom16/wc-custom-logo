@@ -1,0 +1,10 @@
+[data-behaviour~="wc-custom-logo-product"]{
+  position: relative;
+  display: block;
+}
+
+.wc-new-custom-logo img{
+  max-width: 100% !important;
+  height: auto !important;
+  border: none !important;
+}

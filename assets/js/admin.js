@@ -70,9 +70,14 @@ jQuery.fn.wc_logo_customise = function( options ) {
       var $resizeLogo = jQuery( document.createElement('div') );
       var $img = jQuery( document.createElement( 'img' ) );
       $resizeLogo.addClass( 'resize-logo' );
-      $img.attr( 'src', wc_defaults.logo );
+      $img.attr( 'src', wc_defaults.logo_black );
       $img.appendTo( $resizeLogo );
       return $resizeLogo;
+    }
+
+    function updateLogoType(){
+      var logo_type = jQuery( '#wc_logo_type' ).val();
+      $parent.find( '.resize-logo img' ).attr( 'src', wc_defaults[logo_type] );
     }
 
     function getPercentageLeftOfLogo( ui ){
@@ -85,30 +90,54 @@ jQuery.fn.wc_logo_customise = function( options ) {
       return ( ui.position.top / image_height ) * 100;
     }
 
-    function createInputElement( id, label, defaultValue ){
-
+    function getFormValueFromDB( id, defaultValue ){
       var valueFromDB = defaultValue;
       if( window.browserData != undefined && window.browserData[ 'wc_logo' ] != undefined && window.browserData[ 'wc_logo' ][ settings.id ] != undefined ){
         valueFromDB = window.browserData[ 'wc_logo' ][ settings.id ][ id ];
       }
+      return valueFromDB;
+    }
 
+    function createFormElement( id, label ){
       var $container = jQuery( document.createElement( 'div' ) );
       $container.addClass( 'wc-logo-field' );
 
       var $label = jQuery( document.createElement( 'label' ) );
       $label.html( label );
       $label.appendTo( $container );
+      return $container;
+    }
+
+    function createInputElement( id, label, defaultValue ){
+      $container = createFormElement( id, label, defaultValue );
 
       var $input = jQuery( document.createElement('input') );
       $input.attr( 'id', id );
       $input.attr( 'name', 'wc_logo_dimensions[' + id + ']' );
       $input.attr( 'type', 'number' );
       $input.attr( 'step', 'any' );
-      $input.val( valueFromDB );
+      $input.val( getFormValueFromDB( id, defaultValue ) );
       $input.appendTo( $container );
       $input.blur( function( ev ){
         repositionLogo();
       } );
+      return $container;
+    }
+
+    function createLogosDropdown( id, label, defaultValue ){
+      $container = createFormElement( id, label, defaultValue );
+
+      var $select = jQuery( document.createElement('select') );
+      $select.html( "<option value='logo_black'>Black Logo</option><option value='logo_white'>White Logo</option>" );
+      $select.attr( 'id', id );
+      $select.attr( 'name', 'wc_logo_dimensions[' + id + ']' );
+      $select.val( getFormValueFromDB( id, defaultValue ) );
+      $select.appendTo( $container );
+
+      $select.change( function(){
+        updateLogoType();
+      } );
+
       return $container;
     }
 
@@ -155,6 +184,7 @@ jQuery.fn.wc_logo_customise = function( options ) {
     * INITIALISATION FUNCTION
     */
     function init(){
+      createLogosDropdown( 'wc_logo_type', 'Choose Logo', 'logo_black' ).appendTo( $grandparent );
       createInputElement( 'wc_logo_width', 'Width of New Logo', 10 ).appendTo( $grandparent );
       createInputElement( 'wc_logo_top', 'Top Position of New Logo', 10 ).appendTo( $grandparent );
       createInputElement( 'wc_logo_left', 'Left Position of New Logo', 10 ).appendTo( $grandparent );
@@ -187,6 +217,7 @@ jQuery.fn.wc_logo_customise = function( options ) {
         }
       }).wc_logo_resize( { stop: updateLogo } );
       repositionLogo();
+      updateLogoType();
     }
 
 

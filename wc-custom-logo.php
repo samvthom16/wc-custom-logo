@@ -29,51 +29,24 @@
 		require_once( $inc_file );
   }
 
-  function wc_get_dimensions( $post_id ){
-    $dimensions = array(
-      'width' => 10,
-      'top'   => 0,
-      'left'  => 0
-    );
+  function wc_inject_script( $post_id ){
+		$dimensions = get_post_meta( $post_id, 'wc_logo_dimensions', true );
+		if( $dimensions ){
+			include( 'lib/templates/inject_script.php' );
+		}
+	}
 
-    foreach( $dimensions as $key => $val ){
-      $option = get_post_meta( $post_id, 'wc_logo_' . $key, true );
-      if( isset( $option ) ){
-        $dimensions[ $key ] = $option;
-      }
-    }
-    return $dimensions;
-  }
-
-  /*
+	//add_filter( 'woocommerce_single_product_image_html', 'add_class_to_thumbs', 10, 2 );
   add_filter( 'woocommerce_single_product_image_thumbnail_html', 'add_class_to_thumbs', 10, 2 );
   function add_class_to_thumbs( $html, $attachment_id ) {
-    if ( get_post_thumbnail_id() !== intval( $attachment_id ) ) {
-      global $post;
-
-      $html = str_replace( '<a ', '<a data-behaviour="wc-custom-logo-product" data-post="' . $post->ID . '" ', $html );
-
-      $dimensions = wc_get_dimensions( $post->ID );
-
-      ob_start();
-      ?>
-
-      <script type="text/javascript">
-				if( window.browserData === undefined || window.browserData[ 'wc_logo' ] === undefined || window.browserData[ 'wc_logo' ][ <?php _e( $post->ID )?> ] === undefined ){
-					var data = window.browserData = window.browserData || {};
-					window.browserData[ 'wc_logo' ] = window.browserData[ 'wc_logo' ] || {};
-					window.browserData[ 'wc_logo' ][ <?php _e( $post->ID )?> ] = <?php echo wp_json_encode( $dimensions );?>;
-				}
-			</script>
-
-      <?php
-      $html .= ob_get_clean();
-    }
-	  return $html;
+		$html = str_replace( '<a ', '<a data-behaviour="wc-custom-logo-product" data-post="' . $attachment_id . '" ', $html );
+		ob_start();
+		wc_inject_script( $attachment_id );
+		$html .= ob_get_clean();
+		return $html;
   }
 
   function remove_image_zoom_support() {
-    remove_theme_support( 'wc-product-gallery-zoom' );
+  	//remove_theme_support( 'wc-product-gallery-zoom' );
   }
   add_action( 'wp', 'remove_image_zoom_support', 100 );
-  */
