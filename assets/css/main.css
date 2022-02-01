@@ -1,15 +1,4 @@
-
-.wc-custom-logo-product-parent{ position: relative; display: block; }
 .wc-custom-logo-product-parent .zoomImg{ display: none !important; }
-.wc-custom-logo-product-parent::after{
-  content: "";
-  width: 0;
-  height: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-size: contain;
-}
 
 .wc-new-custom-logo img{
   max-width: 100% !important;

@@ -229,41 +229,6 @@ jQuery( document ).ready( function(){
     } );
   }
 
+  jQuery('[data-behaviour~=wc-custom-logo-product]').wc_logo_add();
 
-  /*
-  jQuery('#wc-customize-canvas .resize-logo').draggable({
-    containment: "parent",
-    drag: function( event, ui ){
-      var percentage_left = _WCGetPercentageLeftOfLogo( ui );
-      if( percentage_left > 40 && percentage_left < 60 ){
-        jQuery('#wc-customize-canvas .wc-vertical-line').show();
-      }
-
-      var percentage_top = _WCGetPercentageTopOfLogo( ui );
-      if( percentage_top > 40 && percentage_top < 60 ){
-        jQuery('#wc-customize-canvas .wc-horizontal-line').show();
-      }
-    },
-    stop: function( event, ui ){
-      WCUpdateLogo( ui );
-      jQuery('#wc-customize-canvas .wc-vertical-line').hide();
-      jQuery('#wc-customize-canvas .wc-horizontal-line').hide();
-    }
-  }).resizable({
-    delay       : 300,
-    distance    : 10,
-    containment: "parent",
-    aspectRatio : 1,
-    minWidth    : 80,
-    maxWidth    : 300,
-    stop: function( event, ui ){
-      WCUpdateLogo( ui );
-    }
-  });
-  */
-
-
-
-  // INIT FOR THE FIRST TIME
-  //WCPositionResizeLogo();
 } );

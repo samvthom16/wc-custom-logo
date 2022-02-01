@@ -44,8 +44,29 @@
 		wc_inject( $post_id, 'style' );
 	}
 
-	
+	function wc_inject_all_styles(){
+		global $wc_enabled_ids;
+		$ids_arr = array_unique( $wc_enabled_ids );
+		$db_ids = array_unique( get_option( 'wc_logo_enabled_ids', array() ) );
+		$total_ids = array_unique( array_merge( $db_ids, $ids_arr ) );
 
+		/*
+		echo "<div style='padding: 20px; border: red solid 1px;'>";
+		print_r( $total_ids );
+		echo "</div>";
+		*/
+
+		foreach( $total_ids as $id ){
+			wc_inject_style( $id );
+		}
+	}
+
+	function wc_default_logo_placeholder( $logo_type ){
+		if( $logo_type == 'logo_white' ){
+			return plugins_url( 'wc-custom-logo/assets/images/logo-placeholder-white.png' , dirname(__FILE__) );
+		}
+		return plugins_url( 'wc-custom-logo/assets/images/logo-placeholder-black.png' , dirname(__FILE__) );
+	}
 
 
 	$GLOBALS['wc_enabled_ids'] = array();
@@ -55,17 +76,8 @@
 		$attr['data-behaviour'] = 'wc-custom-logo-product';
 		$attr['data-post'] =  $attachment->ID;
 		array_push( $wc_enabled_ids, $attachment->ID );
-		//wc_inject_script( $attachment->ID );
 		return $attr;
 	}, 5, 10 );
 
-
-	add_action( 'wp_footer', function(){
-		global $wc_enabled_ids;
-		$ids_arr = array_unique( $wc_enabled_ids );
-		$db_ids = array_unique( get_option( 'wc_logo_enabled_ids', array() ) );
-		$total_ids = array_unique( array_merge( $db_ids, $ids_arr ) );
-		foreach( $total_ids as $id ){
-			wc_inject_style( $id );
-		}
-	} );
+	// INJECT STYLES FOR THE FRONTEND
+	add_action( 'wp_footer', function(){ wc_inject_all_styles(); } );
