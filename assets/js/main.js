@@ -1,10 +1,18 @@
-jQuery( document ).ready( function(){
+jQuery.fn.wc_logo_add = function( options ){
+  var settings = jQuery.extend( {
+    //stop: function(){}
+  }, options );
 
-  jQuery('[data-behaviour~=wc-custom-logo-product]').each( function(){
+  return this.each( function(){
     var $el       = jQuery( this ),
       dimensions  = { top: 0, left: 0, width: 0 },
       post_id     = $el.data('post');
 
+
+    $el.parent().addClass( 'wc-custom-logo-product-parent' );
+    $el.parent().addClass( 'wc-custom-logo-product-parent-' + post_id );
+
+    /*
     function addNewLogo(){
       var $logo = jQuery( document.createElement('div') );
       $logo.addClass( 'wc-new-custom-logo' );
@@ -33,9 +41,31 @@ jQuery( document ).ready( function(){
       dimensions  = window.browserData.wc_logo[post_id];
       addNewLogo();
     }
-
-
+    */
   } );
+};
+
+jQuery( document ).ready( function(){
+
+  //console.log( HARUSHOP );
+  //HARUSHOPMAIN
+  
+  if( localStorage.wc_custom_logo ){
+    var $style = jQuery( document.createElement('style') );
+    $style.html( '.wc-custom-logo-product-parent::after{ background-image: url( "' + localStorage.wc_custom_logo + '" );}' );
+    $style.appendTo( 'body' );
+  }
+
+
+  jQuery('.input-images').imageUploader( {
+    //imagesInputName:
+    label: 'Upload Your Image 1200 x 1200 px',
+    maxFiles: 1
+  } );
+
+  //jQuery( '.product-thumb-one' ).attr( 'data-behaviour', 'wc-custom-logo-product' );
+
+  jQuery('[data-behaviour~=wc-custom-logo-product]').wc_logo_add();
 
   /*
   jQuery('.woocommerce-image-zoom').each( function(){

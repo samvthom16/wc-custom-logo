@@ -38,9 +38,14 @@
     * SAVE EACH DIMENSION TO THE PRODUCT META ITSELF
     */
     function saveProductDataPanels(){
+      $option_name = 'wc_logo_enabled_ids';
+      $ids = get_option( $option_name, array() );
+
       $id = 'wc_logo_dimensions';
       if( isset( $_POST[ $id ] ) ){
         update_post_meta( get_the_ID(), $id, $_POST[ $id ] );
+        array_push( $ids, get_the_ID() );
+        update_option( $option_name, $ids );
       }
     }
 

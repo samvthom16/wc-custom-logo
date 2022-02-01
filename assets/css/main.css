@@ -1,10 +1,70 @@
-[data-behaviour~="wc-custom-logo-product"]{
-  position: relative;
-  display: block;
+
+.wc-custom-logo-product-parent{ position: relative; display: block; }
+.wc-custom-logo-product-parent .zoomImg{ display: none !important; }
+.wc-custom-logo-product-parent::after{
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-size: contain;
 }
 
 .wc-new-custom-logo img{
   max-width: 100% !important;
   height: auto !important;
   border: none !important;
+}
+
+.wc-logo-upload{
+  box-shadow: 3px 3px 3px #ddd;
+  border: #f5f5f5 solid 1px;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.wc-logo-upload form{
+  display: flex;
+}
+.wc-logo-upload form .label-button,.wc-logo-upload form .input-images{ width: 50%; }
+.wc-logo-upload form .label-button label{ display: block; margin-top: 20px;}
+.wc-logo-upload form .label-button{
+  padding: 20px;
+  text-align: center;
+}
+.wc-logo-upload form .label-button button{
+  background-color: #1865F2;
+  border: #005987 solid 1px;color: #fff;
+  padding: 7px 20px;
+
+} /* #1865F2 #005987*/
+
+.wc-logo-upload form .input-images{ cursor: pointer; }
+.wc-logo-upload form .image-uploader{
+  color: #333;
+  border: 5px solid #333;
+  min-height: 20rem;
+}
+
+.image-uploader .uploaded .uploaded-image{
+  width: 100%;
+}
+
+.image-uploader .upload-text{
+  padding: 10px;
+  text-align: center;
+}
+
+.image-uploader .uploaded .uploaded-image{ height: auto; padding: 0; margin: 0;}
+.image-uploader .uploaded .uploaded-image img{
+  height: auto;
+  position: relative;
+}
+.image-uploader .uploaded .uploaded-image .delete-image{
+  display: block;
+
 }

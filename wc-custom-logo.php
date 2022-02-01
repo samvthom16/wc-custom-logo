@@ -29,24 +29,43 @@
 		require_once( $inc_file );
   }
 
-  function wc_inject_script( $post_id ){
+	function wc_inject( $post_id, $type = 'script' ){
 		$dimensions = get_post_meta( $post_id, 'wc_logo_dimensions', true );
 		if( $dimensions ){
-			include( 'lib/templates/inject_script.php' );
+			include( "lib/templates/inject_$type.php" );
 		}
 	}
 
-	//add_filter( 'woocommerce_single_product_image_html', 'add_class_to_thumbs', 10, 2 );
-  add_filter( 'woocommerce_single_product_image_thumbnail_html', 'add_class_to_thumbs', 10, 2 );
-  function add_class_to_thumbs( $html, $attachment_id ) {
-		$html = str_replace( '<a ', '<a data-behaviour="wc-custom-logo-product" data-post="' . $attachment_id . '" ', $html );
-		ob_start();
-		wc_inject_script( $attachment_id );
-		$html .= ob_get_clean();
-		return $html;
-  }
+  function wc_inject_script( $post_id ){
+		wc_inject( $post_id, 'script' );
+	}
 
-  function remove_image_zoom_support() {
-  	//remove_theme_support( 'wc-product-gallery-zoom' );
-  }
-  add_action( 'wp', 'remove_image_zoom_support', 100 );
+	function wc_inject_style( $post_id ){
+		wc_inject( $post_id, 'style' );
+	}
+
+	
+
+
+
+	$GLOBALS['wc_enabled_ids'] = array();
+
+	add_filter( 'wp_get_attachment_image_attributes', function( $attr, $attachment, $size ){
+		global $wc_enabled_ids;
+		$attr['data-behaviour'] = 'wc-custom-logo-product';
+		$attr['data-post'] =  $attachment->ID;
+		array_push( $wc_enabled_ids, $attachment->ID );
+		//wc_inject_script( $attachment->ID );
+		return $attr;
+	}, 5, 10 );
+
+
+	add_action( 'wp_footer', function(){
+		global $wc_enabled_ids;
+		$ids_arr = array_unique( $wc_enabled_ids );
+		$db_ids = array_unique( get_option( 'wc_logo_enabled_ids', array() ) );
+		$total_ids = array_unique( array_merge( $db_ids, $ids_arr ) );
+		foreach( $total_ids as $id ){
+			wc_inject_style( $id );
+		}
+	} );

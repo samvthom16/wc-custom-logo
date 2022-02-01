@@ -1,12 +1,4 @@
 
-
-
-
-
-
-
-
-
 jQuery.fn.wc_logo_resize = function( options ){
 
   var settings = jQuery.extend( {
