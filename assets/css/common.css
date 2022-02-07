@@ -7,4 +7,8 @@
   top: 0;
   left: 0;
   background-size: contain;
+  background-repeat: no-repeat;
+}
+.shop_table .cart_item .wc-custom-logo-product-parent{
+  display: inline-block;
 }

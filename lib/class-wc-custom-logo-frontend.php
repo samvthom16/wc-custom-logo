@@ -6,6 +6,9 @@
       add_action( 'wp_enqueue_scripts', array( $this, 'loadAssets' ) );
 
       add_shortcode( 'wc_logo_upload', array( $this, 'uploadHTML' ) );
+
+      add_action( 'wp_ajax_nopriv_wc_custom_logo_upload', array( $this, 'ajaxUploadForm' ) );
+      add_action( 'wp_ajax_wc_custom_logo_upload', array( $this, 'ajaxUploadForm' ) );
     }
 
     function loadAssets(){
@@ -77,6 +80,11 @@
     }
 
     function uploadHTML( $atts ){
+
+      $atts = shortcode_atts( array(
+        'redirect' => '',
+      ), $atts, 'wc_logo_upload' );
+
       $attachment_id = 0;
       $attachment_src = '';
 
@@ -96,6 +104,29 @@
       ob_start();
       include( 'templates/upload_form.php' );
       return ob_get_clean();
+    }
+
+    function ajaxUploadForm(){
+
+      $attachment_id = 0;
+      $attachment_src = '';
+
+      if( $_POST && $_FILES ){
+
+        // VERIFY NONCE
+        wp_verify_nonce( $_REQUEST['_wpnonce'], 'wc-logo-upload' );
+
+        // VALIDATE FILES
+        $this->validateFiles();
+
+        // UPLOAD MEDIA
+        $attachment_id = $this->handleMediaUpload( $_FILES );
+        $attachment_src = $this->getAttachmentSrc( $attachment_id );
+      }
+
+      echo $attachment_src;
+      
+      wp_die();
     }
 
   }
