@@ -9,7 +9,7 @@
     <div class='input-images'></div>
     <div class='label-button'>
       <label>Upload Design</label>
-      <button type='submit'>INSERT IMAGE</button>
+      <button type='submit'>ADD IMAGE TO PRODUCTS</button>
     </div>
     <input type='hidden' name='wc_custom_logo_upload_url' value='<?php echo admin_url( 'admin-ajax.php?action=wc_custom_logo_upload' );?>' />
     <input type='hidden' name='wc_custom_logo_redirect_url' value='<?php echo $atts['redirect'];?>' />
