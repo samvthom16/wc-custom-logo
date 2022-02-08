@@ -19,6 +19,21 @@
 .wc-logo-upload form{
   display: flex;
 }
+
+.wc-logo-upload .upload-text{
+  background-image: url( '../images/upload-logo-placeholder.png' );
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.wc-logo-upload .upload-text .iui-cloud-upload,
+.wc-logo-upload .upload-text span{
+  display: none;
+}
+
 .wc-logo-upload form .label-button,.wc-logo-upload form .input-images{ width: 50%; }
 .wc-logo-upload form .label-button label{ display: block; margin-top: 20px;}
 .wc-logo-upload form .label-button{
