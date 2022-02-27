@@ -85,6 +85,7 @@
         'redirect' => '',
       ), $atts, 'wc_logo_upload' );
 
+      /* NO LONGER NEEDED AS IT IS BEING HANDLED BY AJAX
       $attachment_id = 0;
       $attachment_src = '';
 
@@ -99,7 +100,10 @@
         // UPLOAD MEDIA
         $attachment_id = $this->handleMediaUpload( $_FILES );
         $attachment_src = $this->getAttachmentSrc( $attachment_id );
+
+
       }
+      */
 
       ob_start();
       include( 'templates/upload_form.php' );
@@ -122,10 +126,12 @@
         // UPLOAD MEDIA
         $attachment_id = $this->handleMediaUpload( $_FILES );
         $attachment_src = $this->getAttachmentSrc( $attachment_id );
+
+        WC()->session->set( 'wc_custom_logo', $attachment_src );
       }
 
       echo $attachment_src;
-      
+
       wp_die();
     }
 

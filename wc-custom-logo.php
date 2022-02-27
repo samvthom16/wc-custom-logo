@@ -81,3 +81,57 @@
 
 	// INJECT STYLES FOR THE FRONTEND
 	add_action( 'wp_footer', function(){ wc_inject_all_styles(); } );
+
+
+
+
+
+	// Displaying the checkboxes
+	add_action( 'woocommerce_before_add_to_cart_button', 'add_fields_before_add_to_cart' );
+	function add_fields_before_add_to_cart( ) {
+		global $product;
+	?>
+		<div class="wc-custom-logo-extras">
+			<input type='hidden' name='wc_custom_logo_image_src' value='<?php echo WC()->session->get( 'wc_custom_logo' );?>' />
+		</div>
+		<?php
+	}
+
+// Add data to cart item
+add_filter( 'woocommerce_add_cart_item_data', 'add_cart_item_data', 25, 2 );
+function add_cart_item_data( $cart_item_data, $product_id ) {
+	$key = 'wc_custom_logo_image_src';
+	if( isset( $_POST[$key] ) ) $cart_item_data[$key] = $_POST[$key];
+	return $cart_item_data;
+}
+
+/*
+// Display custom data on cart and checkout page.
+add_filter( 'woocommerce_get_item_data', 'get_item_data' , 25, 2 );
+function get_item_data ( $cart_data, $cart_item ) {
+	$key = 'wc_custom_logo_image_src';
+	if( ! empty( $cart_item[ $key ] ) ){
+        $values =  array();
+        foreach( $cart_item['custom_data'] as $key => $value )
+            if( $key != 'unique_key' ){
+                $values[] = $value;
+            }
+        $values = implode( ', ', $values );
+        $cart_data[] = array(
+            'name'    => __( "Option", "aoim"),
+            'display' => $values
+        );
+    }
+
+    return $cart_data;
+}
+*/
+
+// Add order item meta.
+add_action( 'woocommerce_add_order_item_meta', 'add_order_item_meta' , 10, 3 );
+function add_order_item_meta ( $item_id, $cart_item, $cart_item_key ) {
+	$key = 'wc_custom_logo_image_src';
+	if ( isset( $cart_item[ $key ] ) ) {
+		wc_add_order_item_meta( $item_id, $key, $cart_item[ $key ] );
+	}
+}

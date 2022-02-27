@@ -40,9 +40,11 @@ jQuery( document ).ready( function(){
         success     : function( attachment_src ) {
           localStorage.wc_custom_logo = attachment_src;
 
+          console.log( attachment_src );
+
           if( redirect_url ){
             setTimeout( function() {
-              location.href = redirect_url;
+              //location.href = redirect_url;
             }, 500 );
           }
         }
