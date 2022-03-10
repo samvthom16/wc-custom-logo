@@ -44,8 +44,8 @@ jQuery( document ).ready( function(){
 
           if( redirect_url ){
             setTimeout( function() {
-              //location.href = redirect_url;
-            }, 500 );
+              location.href = redirect_url;
+            }, 700 );
           }
         }
       } );
