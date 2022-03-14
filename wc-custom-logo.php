@@ -105,27 +105,28 @@ function add_cart_item_data( $cart_item_data, $product_id ) {
 	return $cart_item_data;
 }
 
-/*
+
 // Display custom data on cart and checkout page.
 add_filter( 'woocommerce_get_item_data', 'get_item_data' , 25, 2 );
 function get_item_data ( $cart_data, $cart_item ) {
 	$key = 'wc_custom_logo_image_src';
-	if( ! empty( $cart_item[ $key ] ) ){
-        $values =  array();
-        foreach( $cart_item['custom_data'] as $key => $value )
-            if( $key != 'unique_key' ){
-                $values[] = $value;
-            }
-        $values = implode( ', ', $values );
-        $cart_data[] = array(
-            'name'    => __( "Option", "aoim"),
-            'display' => $values
-        );
-    }
 
-    return $cart_data;
+	$image_id = ( isset( $cart_item['data'] ) && isset( $cart_item['data']->get_data()['image_id'] ) ) ? $cart_item['data']->get_data()['image_id'] : 0;
+
+	if( !empty( $cart_item[ $key ] ) && $image_id ){
+		?>
+		<style>
+			.woocommerce-cart .product-thumbnail .wc-custom-logo-product-parent-<?php _e( $image_id )?>::after{
+				background-image: url('<?php _e( $cart_item[ $key ] );?>') !important;
+			}
+		</style>
+		<?php
+		//echo "<p>" . $image_id . " ". $cart_item[ $key ] . "</p>";
+
+  }
+	return $cart_data;
 }
-*/
+
 
 // Add order item meta.
 add_action( 'woocommerce_add_order_item_meta', 'add_order_item_meta' , 10, 3 );
