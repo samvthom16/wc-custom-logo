@@ -13,6 +13,7 @@ jQuery( document ).ready( function(){
           social_tools:'',
           animation_speed:'normal',
           theme:'light_square',
+          allow_resize: false,
           changepicturecallback: function(){
             var post_id = $parent.find( 'img[data-behaviour~=wc-custom-logo-product]' ).data( 'post' );
 
@@ -40,7 +41,7 @@ jQuery( document ).ready( function(){
             default_height: 600,
             theme: 'pp_woocommerce',
             changepicturecallback : function() {
-              
+
               jQuery( '#pp_full_res [data-behaviour~=wc-custom-logo-product]' ).wc_logo_add();
 
                 jQuery('.pp_inline').find('form.variations_form').wc_variation_form();
