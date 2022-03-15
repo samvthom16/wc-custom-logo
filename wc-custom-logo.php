@@ -76,6 +76,11 @@
 		$attr['data-behaviour'] = 'wc-custom-logo-product';
 		$attr['data-post'] =  $attachment->ID;
 		array_push( $wc_enabled_ids, $attachment->ID );
+
+		if ( is_page( 'cart' ) || is_cart() ) {
+			$attr['data-cart'] = 1;
+		}
+
 		return $attr;
 	}, 5, 10 );
 
@@ -115,15 +120,16 @@ function get_item_data ( $cart_data, $cart_item ) {
 
 	if( !empty( $cart_item[ $key ] ) && $image_id ){
 		?>
-		<style>
+		<!--style>
 			.woocommerce-cart .product-thumbnail .wc-custom-logo-product-parent-<?php _e( $image_id )?>::after{
 				background-image: url('<?php _e( $cart_item[ $key ] );?>') !important;
 			}
-		</style>
-		<?php
-		//echo "<p>" . $image_id . " ". $cart_item[ $key ] . "</p>";
+		</style-->
+		<p style='margin-top: 20px; text-decoration: underline; font-size:small;'><a data-rel='prettyPhoto' href='<?php echo $cart_item[ $key ];?>'>With Custom Logo</a><p>
 
-  }
+		<?php
+
+	}
 	return $cart_data;
 }
 
