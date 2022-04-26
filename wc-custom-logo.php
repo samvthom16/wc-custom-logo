@@ -2,11 +2,11 @@
 	/*
     Plugin Name: WC Custom Logo
     Plugin URI: https://sputznik.com
-    Description: WooCommerce Add-on that allows customers to upload custom logo on the products
+    Description: WooCommerce Add-on that allows customers to upload their logos on the products
     Author: Samuel Thomas
     Version: 1.0.0
     Author URI: https://sputznik.com
-    */
+	*/
 
 
 	define( 'WC_CUSTOM_LOGO_VERSION', time() );
@@ -21,6 +21,8 @@
 
 
 	$inc_files = array(
+		'lib/class-wc-base.php',
+		'lib/class-image-util.php',
     'lib/class-wc-custom-logo-admin.php',
     'lib/class-wc-custom-logo-frontend.php'
 	);
@@ -28,6 +30,22 @@
 	foreach( $inc_files as $inc_file ){
 		require_once( $inc_file );
   }
+
+
+	add_action( 'wp_ajax_wc_custom_logo_removebg', function(){
+		if( isset( $_GET[ 'img' ] ) ){
+			$util = \WC_CUSTOM_LOGO\IMAGE_UTIL::getInstance();
+			print_r( $util->removebg( $_GET[ 'img' ] ) );
+		}
+		else{
+			echo "No image passed.";
+		}
+		wp_die();
+	} );
+
+
+
+
 
 	function wc_inject( $post_id, $type = 'script' ){
 		$dimensions = get_post_meta( $post_id, 'wc_logo_dimensions', true );

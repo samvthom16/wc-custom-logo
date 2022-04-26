@@ -62,12 +62,7 @@
         foreach( $data as $key => $value ){
           $attachment_id = media_handle_upload( $key, 0, array( 'test_form'=> false ) );
           return $attachment_id;
-          /*
-          if( is_wp_error( $attachment_id ) ){
-            //print_r( $attachment_id );
-          }
-          */
-  			}
+        }
       }
   	}
 
@@ -84,26 +79,6 @@
       $atts = shortcode_atts( array(
         'redirect' => '',
       ), $atts, 'wc_logo_upload' );
-
-      /* NO LONGER NEEDED AS IT IS BEING HANDLED BY AJAX
-      $attachment_id = 0;
-      $attachment_src = '';
-
-      if( $_POST && $_FILES ){
-
-        // VERIFY NONCE
-        wp_verify_nonce( $_REQUEST['_wpnonce'], 'wc-logo-upload' );
-
-        // VALIDATE FILES
-        $this->validateFiles();
-
-        // UPLOAD MEDIA
-        $attachment_id = $this->handleMediaUpload( $_FILES );
-        $attachment_src = $this->getAttachmentSrc( $attachment_id );
-
-
-      }
-      */
 
       ob_start();
       include( 'templates/upload_form.php' );

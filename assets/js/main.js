@@ -1,5 +1,61 @@
-function setStyles(){
+WC_CUSTOM_LOGO_FRONTEND = {
 
+  setStyles: function(){
+    if( localStorage.wc_custom_logo ){
+      var $style = jQuery( document.createElement('style') );
+      $style.html( '.wc-custom-logo-product-parent::after{ background-image: url( "' + localStorage.wc_custom_logo + '" ) !important;}' );
+      $style.appendTo( 'body' );
+      //preloaded.push( { id: 1, src: localStorage.wc_custom_logo } );
+    }
+  },
+
+  setCustomLogo: function( attachment_src ){
+    localStorage.wc_custom_logo = attachment_src;
+  },
+
+  redirect: function(){
+    var redirect_url = jQuery( 'input[name=wc_custom_logo_redirect_url]' ).val();
+    if( redirect_url ){
+      setTimeout( function() {
+        location.href = redirect_url;
+      }, 700 );
+    }
+  },
+
+  uploadLogo: function( $form, callback = function(){} ){
+    jQuery.ajax( {
+      type        : 'POST',
+      cache       : false,
+      contentType : false,
+      processData : false,
+      url         : jQuery( 'input[name=wc_custom_logo_upload_url]' ).val(),
+      data        : new FormData( $form ),
+      success     : function( attachment_src ) {
+        callback( attachment_src );
+      }
+    } );
+  },
+
+  removebg: function( attachment_src, callback ){
+    jQuery.ajax( {
+      type        : 'GET',
+      url         : jQuery( 'input[name=wc_custom_logo_removebg_url]' ).val(),
+      data        : {
+        img: attachment_src
+      },
+      success     : function( attachment_src ) {
+        callback( attachment_src );
+      }
+    } );
+  }
+}
+
+function wc_custom_logo_callback_completed( attachment_src ){
+  var $submit_btn = jQuery( '[data-behaviour~=wc-custom-logo-form]' ).find( 'button[type=submit]' );
+  $submit_btn.html( 'Uploaded' );
+
+  WC_CUSTOM_LOGO_FRONTEND.setCustomLogo( attachment_src );
+  WC_CUSTOM_LOGO_FRONTEND.redirect();
 }
 
 jQuery( document ).ready( function(){
@@ -9,59 +65,58 @@ jQuery( document ).ready( function(){
 
   var preloaded = [];
 
-  if( localStorage.wc_custom_logo ){
-    var $style = jQuery( document.createElement('style') );
-    $style.html( '.wc-custom-logo-product-parent::after{ background-image: url( "' + localStorage.wc_custom_logo + '" ) !important;}' );
-    $style.appendTo( 'body' );
+  WC_CUSTOM_LOGO_FRONTEND.setStyles();
 
-    //preloaded.push( { id: 1, src: localStorage.wc_custom_logo } );
-  }
+
 
   jQuery( '[data-behaviour~=wc-custom-logo-form]' ).each( function(){
-    var $el       = jQuery( this ),
-    url           = jQuery( 'input[name=wc_custom_logo_upload_url]' ).val(),
-    redirect_url  = jQuery( 'input[name=wc_custom_logo_redirect_url]' ).val();
+    var $el       = jQuery( this );
 
     $el.submit( function( ev ){
-      ev.preventDefault();
 
-      var formdata = new FormData( $el[0] );
+      ev.preventDefault();
 
       var $submit_btn = $el.find( 'button[type=submit]' );
       $submit_btn.html( 'Uploading ...' );
 
-      jQuery.ajax( {
-        type        : 'POST',
-        cache       : false,
-        contentType : false,
-        processData : false,
-        url         : url,
-        data        : formdata,
-        success     : function( attachment_src ) {
-          localStorage.wc_custom_logo = attachment_src;
+      var removebg_flag = jQuery( 'input[name=wc_custom_logo_remove_flag]:checked' ).length;
 
-          console.log( attachment_src );
+      WC_CUSTOM_LOGO_FRONTEND.uploadLogo( $el[0], function( attachment_src ){
 
-          if( redirect_url ){
-            setTimeout( function() {
-              location.href = redirect_url;
-            }, 700 );
-          }
+        // CHECK REMOVE BG FLAG
+        if( removebg_flag ){
+
+          $submit_btn.html( 'Removing background color' );
+
+          // REMOVE BG - AJAX REQUEST
+          WC_CUSTOM_LOGO_FRONTEND.removebg(
+            attachment_src,
+            function( attachment_src ){
+              wc_custom_logo_callback_completed( attachment_src );
+            }
+          )
+        }
+        else{
+          wc_custom_logo_callback_completed( attachment_src );
         }
       } );
-
-      console.log( 'submit' );
     } );
   } );
 
 
-
+  // INIT THE IMAGE UPLOADER
   jQuery('.input-images').imageUploader( {
     preloaded : preloaded,
     label     : 'Upload Your Image 1200 x 1200 px',
     maxFiles  : 1
   } );
 
+  // ENABLE THE FORM SUBMIT WHEN THE IMAGE IS SELECTED
+  jQuery( 'input[type=file]' ).on( 'change', function(){
+    jQuery( '.wc-logo-upload button[type=submit]' ).attr( 'disabled', false );
+  } );
+
+  // ADD THE LOGO FROM THE LOCAL STORAGE ON ALL LOOGOS
   jQuery('[data-behaviour~=wc-custom-logo-product]').wc_logo_add();
 
 } );

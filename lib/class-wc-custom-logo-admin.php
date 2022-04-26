@@ -21,6 +21,45 @@
       */
       add_action( 'attachment_fields_to_save', array( $this, 'saveProductDataPanels') );
 
+      add_filter( 'woocommerce_settings_tabs_array', __CLASS__ . '::add_settings_tab', 50 );
+      add_action( 'woocommerce_settings_tabs_custom_logo', array( $this, 'settings_tab' ) );
+      add_action( 'woocommerce_update_options_custom_logo', array( $this, 'wc_update_settings' ) );
+
+    }
+
+    public static function add_settings_tab( $settings_tabs ) {
+        $settings_tabs['custom_logo'] = __( 'Custom Logo', 'woocommerce-settings-custom-logo' );
+        return $settings_tabs;
+    }
+
+    function settings_tab() {
+      woocommerce_admin_fields( $this->wc_get_settings() );
+    }
+
+    function wc_update_settings(){
+      woocommerce_update_options( $this->wc_get_settings() );
+    }
+
+    function wc_get_settings() {
+      $settings = array(
+        'section_title' => array(
+          'name'     => __( 'Custom Logo Settings', 'woocommerce-settings-custom-logo' ),
+          'type'     => 'title',
+          'desc'     => '',
+          'id'       => 'wc_settings_tab_custom_logo_section_title'
+        ),
+        'title' => array(
+          'name' => __( 'Remove BG API Key', 'woocommerce-settings-custom-logo' ),
+          'type' => 'text',
+          'desc' => __( 'API key used for removing background colors from the custom logos', 'woocommerce-settings-tab-demo' ),
+          'id'   => 'wc_settings_tab_custom_logo_api_key'
+        ),
+        'section_end' => array(
+          'type'  => 'sectionend',
+          'id'    => 'wc_settings_tab_custom_logo_section_end'
+        )
+      );
+      return apply_filters( 'wc_settings_tab_custom_logo_settings', $settings );
     }
 
     function loadAssets(){

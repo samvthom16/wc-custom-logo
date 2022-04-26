@@ -38,7 +38,6 @@
 .wc-logo-upload form .label-button label{ display: block; margin-top: 20px;}
 .wc-logo-upload form .label-button{
   padding: 20px;
-  text-align: center;
 }
 .wc-logo-upload form .label-button button{
   background-color: #1865F2;
@@ -46,6 +45,11 @@
   padding: 7px 20px;
 
 } /* #1865F2 #005987*/
+
+.wc-logo-upload form .label-button button[disabled]{
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
 .wc-logo-upload form .input-images{ cursor: pointer; }
 .wc-logo-upload form .image-uploader{
