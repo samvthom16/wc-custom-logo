@@ -31,8 +31,7 @@
 		require_once( $inc_file );
   }
 
-
-	add_action( 'wp_ajax_wc_custom_logo_removebg', function(){
+	function wc_custom_logo_removebg(){
 		if( isset( $_GET[ 'img' ] ) ){
 			$util = \WC_CUSTOM_LOGO\IMAGE_UTIL::getInstance();
 			print_r( $util->removebg( $_GET[ 'img' ] ) );
@@ -41,10 +40,11 @@
 			echo "No image passed.";
 		}
 		wp_die();
-	} );
+	}
 
 
-
+	add_action( 'wp_ajax_wc_custom_logo_removebg', 'wc_custom_logo_removebg' );
+	add_action( 'wp_ajax_nopriv_wc_custom_logo_removebg', 'wc_custom_logo_removebg' );
 
 
 	function wc_inject( $post_id, $type = 'script' ){

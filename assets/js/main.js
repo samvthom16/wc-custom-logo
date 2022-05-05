@@ -16,15 +16,15 @@ WC_CUSTOM_LOGO_FRONTEND = {
   redirect: function(){
     var redirect_url = jQuery( 'input[name=wc_custom_logo_redirect_url]' ).val();
 
-    console.log( redirect_url );
+    //console.log( redirect_url );
 
-    /*
+
     if( redirect_url ){
       setTimeout( function() {
         location.href = redirect_url;
       }, 700 );
     }
-    */
+    
   },
 
   uploadLogo: function( $form, callback = function(){} ){
@@ -42,6 +42,10 @@ WC_CUSTOM_LOGO_FRONTEND = {
   },
 
   removebg: function( attachment_src, callback ){
+
+    console.log( 'inside removebg' );
+    console.log( attachment_src );
+
     jQuery.ajax( {
       type        : 'GET',
       url         : jQuery( 'input[name=wc_custom_logo_removebg_url]' ).val(),
