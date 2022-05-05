@@ -55,6 +55,8 @@ function wc_custom_logo_callback_completed( attachment_src ){
   $submit_btn.html( 'Uploaded' );
 
   WC_CUSTOM_LOGO_FRONTEND.setCustomLogo( attachment_src );
+  console.log( attachment_src );
+
   WC_CUSTOM_LOGO_FRONTEND.redirect();
 }
 
@@ -83,10 +85,12 @@ jQuery( document ).ready( function(){
 
       WC_CUSTOM_LOGO_FRONTEND.uploadLogo( $el[0], function( attachment_src ){
 
+        console.log( attachment_src );
+
         // CHECK REMOVE BG FLAG
         if( removebg_flag ){
 
-          $submit_btn.html( 'Removing background color' );
+          $submit_btn.html( 'Removing background color ...' );
 
           // REMOVE BG - AJAX REQUEST
           WC_CUSTOM_LOGO_FRONTEND.removebg(
