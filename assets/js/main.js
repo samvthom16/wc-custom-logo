@@ -72,6 +72,9 @@ jQuery( document ).ready( function(){
 
 
   jQuery( '[data-behaviour~=wc-custom-logo-form]' ).each( function(){
+
+    console.log( 'testing mode' );
+
     var $el       = jQuery( this );
 
     $el.submit( function( ev ){
