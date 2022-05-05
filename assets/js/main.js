@@ -15,7 +15,9 @@ WC_CUSTOM_LOGO_FRONTEND = {
 
   redirect: function(){
     var redirect_url = jQuery( 'input[name=wc_custom_logo_redirect_url]' ).val();
+
     console.log( redirect_url );
+
     /*
     if( redirect_url ){
       setTimeout( function() {
@@ -76,7 +78,7 @@ jQuery( document ).ready( function(){
 
   jQuery( '[data-behaviour~=wc-custom-logo-form]' ).each( function(){
 
-    console.log( 'testing mode' );
+    console.log( 'testing mode 1.0' );
 
     var $el       = jQuery( this );
 
