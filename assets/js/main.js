@@ -15,11 +15,14 @@ WC_CUSTOM_LOGO_FRONTEND = {
 
   redirect: function(){
     var redirect_url = jQuery( 'input[name=wc_custom_logo_redirect_url]' ).val();
+    console.log( redirect_url );
+    /*
     if( redirect_url ){
       setTimeout( function() {
         location.href = redirect_url;
       }, 700 );
     }
+    */
   },
 
   uploadLogo: function( $form, callback = function(){} ){
