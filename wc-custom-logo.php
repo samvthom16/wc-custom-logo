@@ -24,7 +24,8 @@
 		'lib/class-wc-base.php',
 		'lib/class-image-util.php',
     'lib/class-wc-custom-logo-admin.php',
-    'lib/class-wc-custom-logo-frontend.php'
+    'lib/class-wc-custom-logo-frontend.php',
+		'lib/class-wc-custom-cart.php'
 	);
 
 	foreach( $inc_files as $inc_file ){
@@ -106,15 +107,106 @@
 	add_action( 'wp_footer', function(){ wc_inject_all_styles(); } );
 
 
+	function wc_get_label_designs(){
+		return array(
+			'front' => array(
+				'label' => 'Front (+ $3.00)',
+				'cost'	=> 3
+			),
+			'back' 	=> array(
+				'label' => 'Back (+ $4.00)',
+				'cost'	=> 4
+			),
+			'chest' 	=> array(
+				'label' => 'Left Chest (+ $2.50)',
+				'cost'	=> 2.5
+			),
+		);
+	}
 
+	function wc_get_discounts_table(){
+		return array(
+			'2400' 	=> 70,
+			'1800'	=> 68,
+			'1500'	=> 67,
+			'1200'	=> 65,
+			'900'		=> 62,
+			'600'		=> 61,
+			'500'		=> 60,
+			'200'		=> 59,
+			'100'		=> 55,
+			'60'		=> 50,
+			'48'		=> 45,
+			'24'		=> 32,
+			'12'		=> 20,
+			'7'			=> 10
+		);
+	}
+
+	function getWCSettings( $product_id ){
+		$admin = new WC_CUSTOM_LOGO_ADMIN;
+		return $admin->getSettings( $product_id );
+	}
 
 
 	// Displaying the checkboxes
 	add_action( 'woocommerce_before_add_to_cart_button', 'add_fields_before_add_to_cart' );
 	function add_fields_before_add_to_cart( ) {
 		global $product;
+
+		$sizes = array(
+			'S', 'M', 'L', 'XL', 'YL', 'YM', 'YS', 'YXL'
+		);
+
+		$label_designs = wc_get_label_designs();
+		$allowed_settings = getWCSettings( $product->id );
+		$allowed_label_designs = array();
+
+		foreach( $allowed_settings as $setting ){
+			if( isset( $label_designs[ $setting ] ) ){
+				$allowed_label_designs[ $setting ] = $label_designs[ $setting ];
+			}
+		}
+
+
+
 	?>
 		<div class="wc-custom-logo-extras">
+
+			<?php if( count( $allowed_label_designs ) ):?>
+			<div style='margin:20px 0 40px;'>
+				<p>Select one or more placements for your design:</p>
+				<ul style='list-style:none; padding-left:0;'>
+				<?php foreach( $allowed_label_designs as $slug => $label_design ):?>
+					<li>
+						<label>
+							<input type='checkbox' name='wc_custom_label_design[]' value='<?php echo $slug;?>' />
+							<?php echo $label_design['label'];?>
+						</label>
+					</li>
+				<?php endforeach;?>
+				</ul>
+			</div>
+			<?php endif;?>
+
+
+
+			<?php if( in_array( 'sizes', $allowed_settings ) ):?>
+			<table class='wc-table' data-behaviour='wc-custom-sizes'>
+				<tr>
+					<?php foreach( $sizes as $size ):?>
+						<th><?php echo $size;?></th>
+					<?php endforeach;?>
+				</tr>
+				<tr>
+					<?php foreach( $sizes as $size ): $name = "wc_custom_sizes[ $size ]";?>
+						<td><input type='number' name='<?php echo $name;?>' value='0' step='1' min='0' /></td>
+					<?php endforeach;?>
+				</tr>
+			</table>
+			<?php endif;?>
+
+
 			<input type='hidden' name='wc_custom_logo_image_src' value='<?php echo WC()->session->get( 'wc_custom_logo' );?>' />
 		</div>
 		<?php
@@ -123,40 +215,42 @@
 // Add data to cart item
 add_filter( 'woocommerce_add_cart_item_data', 'add_cart_item_data', 25, 2 );
 function add_cart_item_data( $cart_item_data, $product_id ) {
-	$key = 'wc_custom_logo_image_src';
-	if( isset( $_POST[$key] ) ) $cart_item_data[$key] = $_POST[$key];
+	$keys = array( 'wc_custom_logo_image_src', 'wc_custom_label_design', 'wc_custom_sizes' );
+	foreach( $keys as $key ){
+		if( isset( $_POST[$key] ) ) $cart_item_data[$key] = $_POST[$key];
+	}
 	return $cart_item_data;
 }
 
+/*
+add_filter( 'woocommerce_is_sold_individually', function(  $return, $product  ){
+	return true;
+}, 10, 2 );
+*/
 
-// Display custom data on cart and checkout page.
-add_filter( 'woocommerce_get_item_data', 'get_item_data' , 25, 2 );
-function get_item_data ( $cart_data, $cart_item ) {
-	$key = 'wc_custom_logo_image_src';
 
-	$image_id = ( isset( $cart_item['data'] ) && isset( $cart_item['data']->get_data()['image_id'] ) ) ? $cart_item['data']->get_data()['image_id'] : 0;
+// https://codeinu.net/language/php/c1787170-get-additional-input-from-the-customer-in-woocommerce-product-page
+// https://quadlayers.com/update-product-price-programmatically-in-woocommerce/
 
-	if( !empty( $cart_item[ $key ] ) && $image_id ){
-		?>
-		<!--style>
-			.woocommerce-cart .product-thumbnail .wc-custom-logo-product-parent-<?php _e( $image_id )?>::after{
-				background-image: url('<?php _e( $cart_item[ $key ] );?>') !important;
-			}
-		</style-->
-		<p style='margin-top: 20px; text-decoration: underline; font-size:small;'><a data-rel='prettyPhoto' href='<?php echo $cart_item[ $key ];?>'>With Custom Logo</a><p>
 
-		<?php
 
-	}
-	return $cart_data;
-}
+
+
+
+
+
+
 
 
 // Add order item meta.
 add_action( 'woocommerce_add_order_item_meta', 'add_order_item_meta' , 10, 3 );
 function add_order_item_meta ( $item_id, $cart_item, $cart_item_key ) {
-	$key = 'wc_custom_logo_image_src';
-	if ( isset( $cart_item[ $key ] ) ) {
-		wc_add_order_item_meta( $item_id, $key, $cart_item[ $key ] );
+
+	$keys = array( 'wc_custom_logo_image_src', 'wc_custom_label_design', 'wc_custom_sizes' );
+
+	foreach( $keys as $key ){
+		if ( isset( $cart_item[ $key ] ) ) {
+			wc_add_order_item_meta( $item_id, $key, $cart_item[ $key ] );
+		}
 	}
 }

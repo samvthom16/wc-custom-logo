@@ -37,3 +37,31 @@ jQuery.fn.wc_logo_add = function( options ){
     }
   } );
 };
+
+jQuery.fn.wc_custom_sizes = function(){
+  return this.each( function(){
+
+    var $table  = jQuery( this ),
+      $qty      = jQuery( 'input[name=quantity]' );
+
+    function calculateQuantity(){
+      var qty_value = 0;
+      $table.find('input[type=number]').each( function(){
+        var $qty_input = jQuery( this );
+        qty_value += parseInt( $qty_input.val() );
+      } );
+
+      if( qty_value < 1 ) qty_value = 1;  // min value of qty should be 1
+
+      $qty.val( qty_value );
+
+      console.log( qty_value );
+    }
+
+    $table.find('input[type=number]').change( calculateQuantity );
+
+    jQuery('.quantity').addClass( 'hide' );
+    
+
+  } );
+};

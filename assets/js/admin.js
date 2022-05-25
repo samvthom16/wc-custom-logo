@@ -178,8 +178,8 @@ jQuery.fn.wc_logo_customise = function( options ) {
     function init(){
       createLogosDropdown( 'wc_logo_type', 'Choose Logo', 'logo_black' ).appendTo( $grandparent );
       createInputElement( 'wc_logo_width', 'Width of New Logo', 10 ).appendTo( $grandparent );
-      createInputElement( 'wc_logo_top', 'Top Position of New Logo', 10 ).appendTo( $grandparent );
-      createInputElement( 'wc_logo_left', 'Left Position of New Logo', 10 ).appendTo( $grandparent );
+      createInputElement( 'wc_logo_top', 'Top Position of New Logo', 44.8 ).appendTo( $grandparent );
+      createInputElement( 'wc_logo_left', 'Left Position of New Logo', 44.8 ).appendTo( $grandparent );
 
       createHelperDiv( 'wc-vertical-line' );
       createHelperDiv( 'wc-horizontal-line' );

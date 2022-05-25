@@ -24,7 +24,7 @@ WC_CUSTOM_LOGO_FRONTEND = {
         location.href = redirect_url;
       }, 700 );
     }
-    
+
   },
 
   uploadLogo: function( $form, callback = function(){} ){
@@ -82,7 +82,7 @@ jQuery( document ).ready( function(){
 
   jQuery( '[data-behaviour~=wc-custom-logo-form]' ).each( function(){
 
-    console.log( 'testing mode 1.0' );
+    //console.log( 'testing mode 1.0' );
 
     var $el       = jQuery( this );
 
@@ -134,5 +134,10 @@ jQuery( document ).ready( function(){
 
   // ADD THE LOGO FROM THE LOCAL STORAGE ON ALL LOOGOS
   jQuery('[data-behaviour~=wc-custom-logo-product]').wc_logo_add();
+
+  jQuery('[data-behaviour~=wc-custom-sizes]').wc_custom_sizes();
+
+  // DISABLE QUANTITY IN THE CART PAGE SO THAT THE SIZES QUANTITY ARE UNAFFECTED
+  jQuery('.woocommerce-cart-form__cart-item .input-text.qty.text').attr('disabled', true );
 
 } );

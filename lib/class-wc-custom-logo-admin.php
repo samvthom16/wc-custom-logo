@@ -19,8 +19,28 @@
       /*
       * SAVE PRODUCT PANEL DATA
       */
+      add_filter( 'woocommerce_product_data_tabs',  function( $tabs ){
+        $tabs['wc_custom_logo'] = array(
+		      'label'    => 'Settings',
+		      'target'   => 'misha_product_data',
+		      'class'    => array(),
+		      'priority' => 21,
+	       );
+	       return $tabs;
+      } );
+      add_action( 'woocommerce_product_data_panels', array( $this, 'showProductPanels' ) );
+      add_action('woocommerce_process_product_meta', function(){
+
+        $checklist = array();
+        if( isset( $_POST[ 'wc_custom_settings' ] ) ){
+          $checklist = $_POST[ 'wc_custom_settings' ];
+        }
+        update_post_meta( get_the_ID(), 'wc_custom_settings', $checklist );
+
+      } );
       add_action( 'attachment_fields_to_save', array( $this, 'saveProductDataPanels') );
 
+      // WooCommerce SETTINGS
       add_filter( 'woocommerce_settings_tabs_array', __CLASS__ . '::add_settings_tab', 50 );
       add_action( 'woocommerce_settings_tabs_custom_logo', array( $this, 'settings_tab' ) );
       add_action( 'woocommerce_update_options_custom_logo', array( $this, 'wc_update_settings' ) );
@@ -119,6 +139,43 @@
       if( $thumbnail_id ){
         echo $this->getCustomiseBtnHTML( $thumbnail_id );
       }
+    }
+
+    function getSettings( $product_id ){
+      $checklist_values = get_post_meta( $product_id, 'wc_custom_settings', true );
+      if( !is_array( $checklist_values ) ) $checklist_values = array();
+      return $checklist_values;
+    }
+
+    function showProductPanels(){
+      echo '<div id="misha_product_data" class="panel woocommerce_options_panel hidden">';
+
+      $checklist_values = $this->getSettings( get_the_ID() );
+
+      //print_r( $checklist_values );
+
+      $options = array(
+        'sizes'     => 'Multiple sizes with quantity',
+        'discount'  => 'Discount breakpoints',
+        'front'     => 'Front logo design',
+        'back'      => 'Back logo design',
+        'chest'     => 'Left-chest logo design',
+      );
+
+      //$this->test( $options );
+
+      echo '<p class="form_field">Select to enable the following options:</p>';
+
+      foreach( $options as $slug => $option ){
+        ?>
+        <p class='form_field'>
+          <input type='checkbox' name='wc_custom_settings[]' <?php if( in_array( $slug, $checklist_values ) ) _e( "checked='checked'" );?> value='<?php echo $slug;?>' />
+          <?php echo $option;?>
+        </p>
+        <?php
+      }
+
+      echo '</div>';
     }
 
 
