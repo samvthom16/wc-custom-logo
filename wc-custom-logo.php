@@ -114,8 +114,8 @@
 				'cost'	=> 3
 			),
 			'back' 	=> array(
-				'label' => 'Back (+ $4.00)',
-				'cost'	=> 4
+				'label' => 'Back (+ $3.00)',
+				'cost'	=> 3
 			),
 			'chest' 	=> array(
 				'label' => 'Left Chest (+ $2.50)',
