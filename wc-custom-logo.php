@@ -155,7 +155,7 @@
 		global $product;
 
 		$sizes = array(
-			'S', 'M', 'L', 'XL', 'YL', 'YM', 'YS', 'YXL'
+			'YS', 'YM', 'YL', 'YXL', 'S', 'M', 'L', 'XL', '2XL', '3XL'
 		);
 
 		$label_designs = wc_get_label_designs();

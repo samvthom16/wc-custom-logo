@@ -74,7 +74,9 @@ class WC_CUSTOM_CART extends WC_BASE{
   				background-image: url('<?php _e( $cart_item[ $key ] );?>') !important;
   			}
   		</style-->
-  		<p style='margin-top: 20px; text-decoration: underline; font-size:small;'><a data-rel='prettyPhoto' href='<?php echo $cart_item[ $key ];?>'>With Custom Logo</a><p>
+  		<p style='margin-top: 20px; text-decoration: underline; font-size:small;'>
+        <a data-resize='1' data-rel='prettyPhoto' href='<?php echo $cart_item[ $key ];?>'>With Custom Logo</a>
+      <p>
 
   		<?php
 

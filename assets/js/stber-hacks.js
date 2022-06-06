@@ -13,7 +13,7 @@ jQuery( document ).ready( function(){
           social_tools:'',
           animation_speed:'normal',
           theme:'light_square',
-          allow_resize: false,
+          allow_resize: $el.data('resize') == 1 ? true : false,
           changepicturecallback: function(){
             var post_id = $parent.find( 'img[data-behaviour~=wc-custom-logo-product]' ).data( 'post' );
 
