@@ -59,80 +59,217 @@ WC_CUSTOM_LOGO_FRONTEND = {
   }
 }
 
-function wc_get_variation_price( variation_id ){
-  var data = jQuery( 'form.variations_form' ).data( 'product_variations' );
-  for( var i=0; i<data.length; i++ ){
-    var product = data[i];
-    if( product.variation_id == variation_id ){
-      return product.display_price;
+
+
+
+
+WC_PRODUCT_DATA = {
+
+  getDiscountInfo: function(){
+
+    var qty = WC_PRODUCT_DATA.getQuantity();
+    var data = window.discounts;
+
+    // PUT THE DISCOUNT KEY BREAKS INTO AN ARRAY
+    var breaks = [];
+    for( const min in data ){
+      breaks.push( parseInt( min ) );
     }
+
+    var finalData = {
+      key: 0,
+      discount: 0,
+      next: [
+        {
+          discount: data[ breaks[0] ],
+          key: breaks[ 0 ]
+        },
+        {
+          discount: data[ breaks[1] ],
+          key: breaks[ 1 ]
+        }
+      ]
+    };
+
+    // SORT IN DESCENDING ORDER
+    breaks.sort( function(a, b){return b-a} );
+
+    for( var i=0; i<breaks.length; i++ ){
+      if( qty >= breaks[i] ){
+
+        // GETTING THE RIGHT DISCOUNT
+        finalData.key = breaks[i];
+        if( data.hasOwnProperty( breaks[i] ) ){
+          finalData.discount = data[ breaks[i] ];
+        }
+
+        finalData.next = [];
+
+        // FINDING THE NEXT DISCOUNT BREAK
+        if( ( i-1 ) >= 0 ){
+          finalData.next.push( {
+            discount: data[ breaks[i-1] ],
+            key: breaks[ i-1 ]
+          } );
+        }
+
+        // FINDING THE NEXT DISCOUNT BREAK
+        if( ( i-2 ) >= 0 ){
+          finalData.next.push( {
+            discount: data[ breaks[i-2] ],
+            key: breaks[ i-2 ]
+          } );
+        }
+        break;
+      }
+    }
+
+    return finalData;
+  },
+
+  getCurrency: function(){
+    return jQuery( '#product_total_price' ).data( 'currency' );
+  },
+
+  formatPrice: function( amount ){
+    return WC_PRODUCT_DATA.getCurrency() + '' + parseFloat( amount ).toFixed( 2 );
+  },
+
+  insertPrice: function( class_selector, amount ){
+    if( amount > 0 ){
+      var html = WC_PRODUCT_DATA.formatPrice( amount );
+      WC_PRODUCT_DATA.insertHTML( class_selector, html );
+    }
+  },
+
+  insertHTML: function( class_selector, html ){
+    var $el = jQuery( '#product_total_price' ).find( '.' + class_selector );
+    $el.html( html );
+  },
+
+  getSelectedLabelDesignElements: function(){
+    return jQuery( '[name="wc_custom_label_design[]"]:checked' );
+  },
+
+  getBasePrice: function( product_id ){
+    var data = jQuery( 'form.variations_form' ).data( 'product_variations' );
+    for( var i=0; i<data.length; i++ ){
+      var product = data[i];
+      if( product.variation_id == product_id ){
+        return product.display_price;
+      }
+    }
+  },
+
+  getLabelDesignPrice: function(){
+    var data = window.label_designs,
+      price = 0;
+
+    WC_PRODUCT_DATA.getSelectedLabelDesignElements().each( function(){
+      var label_design_slug = jQuery( this ).val();
+      price += data[ label_design_slug ].cost;
+    } );
+    return price;
+  },
+
+  getSizesPrice: function(){
+    var data    = window.sizes_costs,
+      total_qty = WC_PRODUCT_DATA.getQuantity(),
+      price     = 0;
+
+    for( var size in data ){
+      var qty = jQuery( 'input[name="wc_custom_sizes[ ' + size + ' ]"]' ).val();
+      if( qty ){
+        price += data[ size ] * qty / total_qty;
+      }
+    }
+
+    return price;
+  },
+
+  getRegularPrice: function(){
+    var product_id  = jQuery( 'input.variation_id' ).val();
+    var base_price = WC_PRODUCT_DATA.getBasePrice( product_id );
+    var extra_price = WC_PRODUCT_DATA.getLabelDesignPrice() + WC_PRODUCT_DATA.getSizesPrice();
+
+    //console.log(  );
+
+
+
+    return base_price + extra_price;
+  },
+
+  getQuantity: function(){
+    return jQuery( '[name=quantity]' ).val();
+  },
+
+  getEstimatedPrice: function(){
+    return WC_PRODUCT_DATA.getRegularPrice() * WC_PRODUCT_DATA.getQuantity();
+  },
+
+  getDiscount: function(){
+    return WC_PRODUCT_DATA.getDiscountInfo().discount;
+  },
+
+  getDiscountedPrice: function( discount ){
+    var regular_price = WC_PRODUCT_DATA.getRegularPrice();
+    return regular_price - ( regular_price * discount/100 );
+  },
+
+  getSalePrice: function(){
+    var discount = WC_PRODUCT_DATA.getDiscount();
+    return WC_PRODUCT_DATA.getDiscountedPrice( discount );
+  },
+
+  getTotalPrice: function(){
+    return WC_PRODUCT_DATA.getSalePrice() * WC_PRODUCT_DATA.getQuantity();
   }
+
 }
 
-function wc_get_label_designs_price(){
-  var data = window.label_designs,
-    price = 0;
 
-  jQuery( '[name="wc_custom_label_design[]"]:checked' ).each( function(){
-    var label_design_slug = jQuery( this ).val();
-    price += data[ label_design_slug ].cost;
-  } );
-  return price;
-}
-
-function wc_get_discount( qty ){
-  var data = window.discounts;
-  var discount = 0
-  for( const min in data ){
-    if( qty >= parseInt( min ) && data[min] > discount ) discount = data[min];
-  }
-  return discount;
-}
 
 function wc_set_total_price(){
-  var qty     = jQuery( '[name=quantity]' ).val(),
-    currency = jQuery( '#product_total_price' ).data( 'currency' ),
-    discount = wc_get_discount( qty ),
-    var_id  = jQuery( 'input.variation_id' ).val();
+  var label_designs_no = WC_PRODUCT_DATA.getSelectedLabelDesignElements().length,
+    discountData       = WC_PRODUCT_DATA.getDiscountInfo(),
+    regular_price      = WC_PRODUCT_DATA.getRegularPrice(),
+    sale_price         = WC_PRODUCT_DATA.getSalePrice(),
+    estimated_price    = WC_PRODUCT_DATA.getEstimatedPrice(),
+    total_price        = WC_PRODUCT_DATA.getTotalPrice();
 
-  function showPrice( $el, amount ){
-    if( amount > 0 ){
-      amount = parseFloat( amount ).toFixed( 2 );
-      $el.html( currency + '' + amount );
-    }
+  //console.log( discountData );
+
+  if( regular_price != sale_price ){
+    WC_PRODUCT_DATA.insertPrice( 'regular_price', regular_price );
+    WC_PRODUCT_DATA.insertPrice( 'estimated_price', estimated_price );
   }
 
-  if( '' != var_id && qty ) {
-    var base_price = wc_get_variation_price( var_id );
-    var extra_price = wc_get_label_designs_price();
-    var regular_price = base_price + extra_price;
+  WC_PRODUCT_DATA.insertPrice( 'sale_price', sale_price );
+  WC_PRODUCT_DATA.insertPrice( 'total_price', total_price );
 
-    var sale_price = regular_price - ( regular_price * discount/100 );
+  WC_PRODUCT_DATA.insertHTML( 'qty', WC_PRODUCT_DATA.getQuantity() );
+  WC_PRODUCT_DATA.insertHTML( 'discount', WC_PRODUCT_DATA.getDiscount() + '%' );
 
-    var estimated_price = regular_price * qty;
-    var price = sale_price * qty;
 
-    if( regular_price != sale_price ){
-      showPrice( jQuery( '#product_total_price span.regular_price' ), regular_price );
-      showPrice( jQuery( '#product_total_price span.estimated_price' ), estimated_price );
+  if( discountData.next && discountData.next.length ){
+
+    var discountedPrice1 = WC_PRODUCT_DATA.formatPrice( WC_PRODUCT_DATA.getDiscountedPrice( discountData.next[0]['discount'] ) );
+    var discountedQty1 = discountData.next[0]['key'];
+    var buyMoreText = 'Order ' + discountedQty1 + ' items and pay <span>' + discountedPrice1 + ' each</span>';
+
+    if( discountData.next.length > 1 ){
+      var discountedPrice2 = WC_PRODUCT_DATA.formatPrice( WC_PRODUCT_DATA.getDiscountedPrice( discountData.next[1]['discount'] ) );
+      var discountedQty2 = discountData.next[1]['key'];
+      buyMoreText += ', or ' + discountedQty2 + ' items and pay <span>' + discountedPrice2 + ' each</span>';
     }
 
-    showPrice( jQuery( '#product_total_price span.sale_price' ), sale_price );
-    showPrice( jQuery( '#product_total_price span.total_price' ), price );
+    WC_PRODUCT_DATA.insertHTML( 'discount-text', buyMoreText );
 
-
-
-    //console.log( wc_get_discount( qty ) );
-
+    WC_PRODUCT_DATA.insertHTML( 'label_designs_no', label_designs_no );
   }
 
-  if( price ){
-    //jQuery( '#product_total_price span.base_price' ).html( sale_price );
-    //jQuery( '#product_total_price span.sale_price' ).html( discounted_price );
 
-    jQuery( '#product_total_price span.discount' ).html( discount + '%' );
-    jQuery( '#product_total_price span.qty' ).html( qty );
-
+  if( total_price ){
     jQuery( '#product_total_price' ).show();
   }
 }

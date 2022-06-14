@@ -95,6 +95,11 @@
   text-align: center;
 }
 
+#product_total_price{
+  display: grid;
+  grid-template-columns: 1fr 220px;
+}
+
 #product_total_price span{
   font-weight: bold;
 }
@@ -105,5 +110,34 @@
   font-weight: bold;
 }
 
+#product_total_price .buy-more{
+  background: #eee;
+  padding: 12px;
+}
+#product_total_price .buy-more h5{
+  font-weight: bold;
+  margin-top: 0;
+}
+
+#product_total_price .purple{
+  color: rgb(255, 136, 0);
+}
+#product_total_price ul{
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+  font-size: 12px;
+}
+#product_total_price ul li{
+  background: #eee;
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 100px;
+}
+
+#product_total_price .discount-text{
+  line-height: 1;
+}
+
 .font-big{ font-size: 18px; }
-.no-margin-bottom{ margin-bottom: 0; }
+.no-margin-bottom{ margin-bottom: 0; line-height: 1;}

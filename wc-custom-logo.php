@@ -154,6 +154,13 @@
 		);
 	}
 
+	function getWCSizesCosts(){
+		return array(
+			'2XL' => 2,
+			'3XL'	=> 3
+		);
+	}
+
 
 	// Displaying the checkboxes
 	add_action( 'woocommerce_before_add_to_cart_button', 'add_fields_before_add_to_cart' );
@@ -227,14 +234,28 @@
 			<script>
 				window.label_designs = <?php echo json_encode( $label_designs );?>;
 				window.discounts = <?php echo json_encode( wc_get_discounts_table() )?>;
+				window.sizes_costs = <?php echo json_encode( getWCSizesCosts() )?>;
 			</script>
 
 
 			<input type='hidden' name='wc_custom_logo_image_src' value='<?php echo WC()->session->get( 'wc_custom_logo' );?>' />
 
 			<div id='product_total_price' style='margin-bottom:20px;' data-currency='<?php echo $currency_symbol;?>'>
-				<p class='no-margin-bottom font-big'><span class='regular_price'></span>&nbsp;<span class='sale_price'></span> each</p>
-				<p class='no-margin-bottom'><span class='estimated_price'></span>&nbsp;<span class='total_price'></span> total for <span class="qty">1</span> item(s) with <span class='discount'>0%</span> Volume Discount</p>
+				<div>
+					<p class='no-margin-bottom font-big'><span class='regular_price'></span>&nbsp;<span class='sale_price purple'></span> <span class='purple'>each</span></p>
+					<p class='no-margin-bottom'><span class='estimated_price'></span>&nbsp;<span class='total_price purple'></span> <span class='purple'>total</span> with <span class='discount'>0%</span> Discount</p>
+					<ul>
+						<li><span class="qty">1</span> total items</li>
+						<li><span class="label_designs_no">0</span> print area</li>
+					</ul>
+				</div>
+
+				<div class='buy-more'>
+					<h5>BUY MORE, SAVE MORE</h5>
+					<p class='discount-text'>Order 15 items and pay $12.91 each</p>
+					<p class='no-margin-bottom'><a href='' style='text-decoration: underline;'>Money Saving Tips</a></p>
+				</div>
+
 			</div>
 
 
