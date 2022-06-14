@@ -94,3 +94,16 @@
   border: none;
   text-align: center;
 }
+
+#product_total_price span{
+  font-weight: bold;
+}
+
+#product_total_price .regular_price, #product_total_price .estimated_price{
+  text-decoration: line-through;
+  color: #ababab;
+  font-weight: bold;
+}
+
+.font-big{ font-size: 18px; }
+.no-margin-bottom{ margin-bottom: 0; }

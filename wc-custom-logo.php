@@ -148,26 +148,46 @@
 		return $admin->getSettings( $product_id );
 	}
 
+	function getWCSizes(){
+		return array(
+			'YS', 'YM', 'YL', 'YXL', 'S', 'M', 'L', 'XL', '2XL', '3XL'
+		);
+	}
+
 
 	// Displaying the checkboxes
 	add_action( 'woocommerce_before_add_to_cart_button', 'add_fields_before_add_to_cart' );
 	function add_fields_before_add_to_cart( ) {
+
+		$currency_symbol = get_woocommerce_currency_symbol();
+
 		global $product;
 
-		$sizes = array(
-			'YS', 'YM', 'YL', 'YXL', 'S', 'M', 'L', 'XL', '2XL', '3XL'
-		);
-
-		$label_designs = wc_get_label_designs();
+		// OVERALL SETTINGS FOR THE PRODUCTS
 		$allowed_settings = getWCSettings( $product->id );
+		//print_r( $allowed_settings );
+
+		// LABEL DESIGNS
+		$label_designs = wc_get_label_designs();
 		$allowed_label_designs = array();
 
+
+		// SIZES
+		$sizes = getWCSizes();
+		$allowed_sizes = array();
+
 		foreach( $allowed_settings as $setting ){
+			//echo $setting;
 			if( isset( $label_designs[ $setting ] ) ){
 				$allowed_label_designs[ $setting ] = $label_designs[ $setting ];
 			}
+			if( in_array( $setting, $sizes ) ){
+				array_push( $allowed_sizes, $setting );
+				//$allowed_sizes[ $setting ] = $label_designs[ $setting ];
+			}
 		}
 
+		//print_r( $allowed_sizes );
 
 
 	?>
@@ -181,7 +201,7 @@
 					<li>
 						<label>
 							<input type='checkbox' name='wc_custom_label_design[]' value='<?php echo $slug;?>' />
-							<?php echo $label_design['label'];?>
+							<span><?php echo $label_design['label'];?></span>
 						</label>
 					</li>
 				<?php endforeach;?>
@@ -189,25 +209,36 @@
 			</div>
 			<?php endif;?>
 
-
-
-			<?php if( in_array( 'sizes', $allowed_settings ) ):?>
+			<?php if( count( $allowed_sizes ) ):?>
 			<table class='wc-table' data-behaviour='wc-custom-sizes'>
 				<tr>
-					<?php foreach( $sizes as $size ):?>
+					<?php foreach( $allowed_sizes as $size ):?>
 						<th><?php echo $size;?></th>
 					<?php endforeach;?>
 				</tr>
 				<tr>
-					<?php foreach( $sizes as $size ): $name = "wc_custom_sizes[ $size ]";?>
+					<?php foreach( $allowed_sizes as $size ): $name = "wc_custom_sizes[ $size ]";?>
 						<td><input type='number' name='<?php echo $name;?>' value='0' step='1' min='0' /></td>
 					<?php endforeach;?>
 				</tr>
 			</table>
 			<?php endif;?>
 
+			<script>
+				window.label_designs = <?php echo json_encode( $label_designs );?>;
+				window.discounts = <?php echo json_encode( wc_get_discounts_table() )?>;
+			</script>
+
 
 			<input type='hidden' name='wc_custom_logo_image_src' value='<?php echo WC()->session->get( 'wc_custom_logo' );?>' />
+
+			<div id='product_total_price' style='margin-bottom:20px;' data-currency='<?php echo $currency_symbol;?>'>
+				<p class='no-margin-bottom font-big'><span class='regular_price'></span>&nbsp;<span class='sale_price'></span> each</p>
+				<p class='no-margin-bottom'><span class='estimated_price'></span>&nbsp;<span class='total_price'></span> total for <span class="qty">1</span> item(s) with <span class='discount'>0%</span> Volume Discount</p>
+			</div>
+
+
+
 		</div>
 		<?php
 	}
@@ -231,8 +262,6 @@ add_filter( 'woocommerce_is_sold_individually', function(  $return, $product  ){
 
 // https://codeinu.net/language/php/c1787170-get-additional-input-from-the-customer-in-woocommerce-product-page
 // https://quadlayers.com/update-product-price-programmatically-in-woocommerce/
-
-
 
 
 

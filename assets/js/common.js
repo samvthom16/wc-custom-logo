@@ -55,13 +55,16 @@ jQuery.fn.wc_custom_sizes = function(){
 
       $qty.val( qty_value );
 
-      console.log( qty_value );
+      //console.log( qty_value );
+
+      wc_set_total_price();
     }
 
     $table.find('input[type=number]').change( calculateQuantity );
 
     jQuery('.quantity').addClass( 'hide' );
-    
+
+    calculateQuantity();
 
   } );
 };

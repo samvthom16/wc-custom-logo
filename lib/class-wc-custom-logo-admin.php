@@ -155,12 +155,17 @@
       //print_r( $checklist_values );
 
       $options = array(
-        'sizes'     => 'Multiple sizes with quantity',
+        //'sizes'     => 'Multiple sizes with quantity',
         'discount'  => 'Discount breakpoints',
         'front'     => 'Front logo design',
         'back'      => 'Back logo design',
         'chest'     => 'Left-chest logo design',
       );
+
+      $sizes = getWCSizes();
+      foreach( $sizes as $size ){
+        $options[ $size ] = 'Size: ' . $size;
+      }
 
       //$this->test( $options );
 
@@ -168,12 +173,14 @@
 
       foreach( $options as $slug => $option ){
         ?>
-        <p class='form_field'>
+        <p class='form_field' style='margin:0; line-height:0.75;'>
           <input type='checkbox' name='wc_custom_settings[]' <?php if( in_array( $slug, $checklist_values ) ) _e( "checked='checked'" );?> value='<?php echo $slug;?>' />
           <?php echo $option;?>
         </p>
         <?php
       }
+
+      echo "<p></p>";
 
       echo '</div>';
     }

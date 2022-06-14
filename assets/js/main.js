@@ -59,6 +59,84 @@ WC_CUSTOM_LOGO_FRONTEND = {
   }
 }
 
+function wc_get_variation_price( variation_id ){
+  var data = jQuery( 'form.variations_form' ).data( 'product_variations' );
+  for( var i=0; i<data.length; i++ ){
+    var product = data[i];
+    if( product.variation_id == variation_id ){
+      return product.display_price;
+    }
+  }
+}
+
+function wc_get_label_designs_price(){
+  var data = window.label_designs,
+    price = 0;
+
+  jQuery( '[name="wc_custom_label_design[]"]:checked' ).each( function(){
+    var label_design_slug = jQuery( this ).val();
+    price += data[ label_design_slug ].cost;
+  } );
+  return price;
+}
+
+function wc_get_discount( qty ){
+  var data = window.discounts;
+  var discount = 0
+  for( const min in data ){
+    if( qty >= parseInt( min ) && data[min] > discount ) discount = data[min];
+  }
+  return discount;
+}
+
+function wc_set_total_price(){
+  var qty     = jQuery( '[name=quantity]' ).val(),
+    currency = jQuery( '#product_total_price' ).data( 'currency' ),
+    discount = wc_get_discount( qty ),
+    var_id  = jQuery( 'input.variation_id' ).val();
+
+  function showPrice( $el, amount ){
+    if( amount > 0 ){
+      amount = parseFloat( amount ).toFixed( 2 );
+      $el.html( currency + '' + amount );
+    }
+  }
+
+  if( '' != var_id && qty ) {
+    var base_price = wc_get_variation_price( var_id );
+    var extra_price = wc_get_label_designs_price();
+    var regular_price = base_price + extra_price;
+
+    var sale_price = regular_price - ( regular_price * discount/100 );
+
+    var estimated_price = regular_price * qty;
+    var price = sale_price * qty;
+
+    if( regular_price != sale_price ){
+      showPrice( jQuery( '#product_total_price span.regular_price' ), regular_price );
+      showPrice( jQuery( '#product_total_price span.estimated_price' ), estimated_price );
+    }
+
+    showPrice( jQuery( '#product_total_price span.sale_price' ), sale_price );
+    showPrice( jQuery( '#product_total_price span.total_price' ), price );
+
+
+
+    //console.log( wc_get_discount( qty ) );
+
+  }
+
+  if( price ){
+    //jQuery( '#product_total_price span.base_price' ).html( sale_price );
+    //jQuery( '#product_total_price span.sale_price' ).html( discounted_price );
+
+    jQuery( '#product_total_price span.discount' ).html( discount + '%' );
+    jQuery( '#product_total_price span.qty' ).html( qty );
+
+    jQuery( '#product_total_price' ).show();
+  }
+}
+
 function wc_custom_logo_callback_completed( attachment_src ){
   var $submit_btn = jQuery( '[data-behaviour~=wc-custom-logo-form]' ).find( 'button[type=submit]' );
   $submit_btn.html( 'Uploaded' );
@@ -139,5 +217,26 @@ jQuery( document ).ready( function(){
 
   // DISABLE QUANTITY IN THE CART PAGE SO THAT THE SIZES QUANTITY ARE UNAFFECTED
   jQuery('.woocommerce-cart-form__cart-item .input-text.qty.text').attr('disabled', true );
+
+
+
+  /* SHOW TOTAL PRODUCT PRICE */
+  jQuery( 'input[name=quantity]' ).change( function() {
+    wc_set_total_price();
+  } );
+
+  jQuery( 'input.variation_id' ).change( function(){
+    wc_set_total_price();
+  } );
+
+  jQuery( '[name="wc_custom_label_design[]"]' ).change( function(){
+    wc_set_total_price();
+  } );
+
+  jQuery( '#product_total_price' ).hide();
+
+
+
+
 
 } );
