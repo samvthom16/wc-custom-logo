@@ -148,14 +148,10 @@
     }
 
     function showProductPanels(){
-      echo '<div id="misha_product_data" class="panel woocommerce_options_panel hidden">';
 
       $checklist_values = $this->getSettings( get_the_ID() );
 
-      //print_r( $checklist_values );
-
       $options = array(
-        //'sizes'     => 'Multiple sizes with quantity',
         'discount'  => 'Discount breakpoints',
         'front'     => 'Front logo design',
         'back'      => 'Back logo design',
@@ -167,22 +163,8 @@
         $options[ $size ] = 'Size: ' . $size;
       }
 
-      //$this->test( $options );
+      include( 'templates/product-data-settings.php' );
 
-      echo '<p class="form_field">Select to enable the following options:</p>';
-
-      foreach( $options as $slug => $option ){
-        ?>
-        <p class='form_field' style='margin:0; line-height:0.75;'>
-          <input type='checkbox' name='wc_custom_settings[]' <?php if( in_array( $slug, $checklist_values ) ) _e( "checked='checked'" );?> value='<?php echo $slug;?>' />
-          <?php echo $option;?>
-        </p>
-        <?php
-      }
-
-      echo "<p></p>";
-
-      echo '</div>';
     }
 
 

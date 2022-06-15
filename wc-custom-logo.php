@@ -224,7 +224,7 @@
 					<?php endforeach;?>
 				</tr>
 				<tr>
-					<?php foreach( $allowed_sizes as $size ): $name = "wc_custom_sizes[ $size ]";?>
+					<?php foreach( $allowed_sizes as $size ): $name = "wc_custom_sizes[$size]";?>
 						<td><input type='number' name='<?php echo $name;?>' value='0' step='1' min='0' /></td>
 					<?php endforeach;?>
 				</tr>

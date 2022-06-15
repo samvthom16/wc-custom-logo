@@ -2,7 +2,7 @@
 
 [data-behaviour~=wc-logo-customize]{
   text-align: center;
-  position: relative; 
+  position: relative;
   line-height: 0;
   max-width: 800px;
 	margin: 0 auto;
@@ -44,3 +44,7 @@
 .compat-field-wc_custom_logo th.label{ display: none; }
 .compat-field-wc_custom_logo td.field{ width: 100%; float: none; }
 body.post-type-attachment .compat-field-wc_custom_logo{ display: none;}
+
+.wc-table input{
+  width: 100% !important;
+}

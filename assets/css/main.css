@@ -78,22 +78,7 @@
 }
 
 
-.wc-table, .wc-table th, .wc-table td {
-  border: 1px solid black !important;
-  border-collapse: collapse;
-  margin-bottom: 40px;
-}
-.wc-table th, .wc-table td{
-  max-width: 60px;
-  text-align: center;
-  padding: 0 5px;
-}
-.wc-table input{
-  margin: 0 auto;
-  max-width: 100%;
-  border: none;
-  text-align: center;
-}
+
 
 #product_total_price{
   display: grid;

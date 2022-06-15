@@ -104,9 +104,12 @@ class WC_CUSTOM_CART extends WC_BASE{
   	// Iterate through each cart item
   	foreach( $cart_obj->get_cart() as $key => $value ) {
 
+      // CHECK IF THE CUSTOM LABEL DESIGN HAS BEEN SELECTED
   		if( isset( $value['wc_custom_label_design'] ) && is_array( $value['wc_custom_label_design'] ) ) {
   			$label_designs = wc_get_label_designs();
   			$price = $value['data']->get_price();
+
+        // ITERATE THROUGH EACH SELECTED DESIGN AND ADD TO THE BASE PRICE
   			foreach( $value['wc_custom_label_design'] as $slug ){
   				if( isset( $label_designs[ $slug ] ) ){
   					$price += $label_designs[ $slug ]['cost'];
@@ -115,9 +118,19 @@ class WC_CUSTOM_CART extends WC_BASE{
   			$value['data']->set_price( ( $price ) );
   		}
 
-  		//echo '<pre>';
-  		//print_r( $value['quantity'] );
-  		//echo '</pre>';
+      // CHECK IF THE CUSTOM SIZE HAS BEEN SELECTED
+      if( isset( $value['wc_custom_sizes'] ) && is_array( $value['wc_custom_sizes'] ) ){
+        $sizes_costs = getWCSizesCosts();
+        $price = $value['data']->get_price();
+
+        // ITERATE THROUGH EACH SELECTED SIZE AND ADD TO THE BASE PRICE
+        foreach( $value['wc_custom_sizes'] as $slug => $size_qty ){
+          if( $size_qty && isset( $sizes_costs[ $slug ] ) ){
+            $price += $sizes_costs[ $slug ] * $size_qty / $value['quantity'];
+          }
+        }
+        $value['data']->set_price( ( $price ) );
+      }
 
       // APPLY AVAILABLE DISCOUNT FROM THE TABLE
   		$avail_discount = $this->getAvailableDiscount( $value['quantity'] );

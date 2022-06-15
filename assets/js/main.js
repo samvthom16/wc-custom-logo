@@ -178,7 +178,7 @@ WC_PRODUCT_DATA = {
       price     = 0;
 
     for( var size in data ){
-      var qty = jQuery( 'input[name="wc_custom_sizes[ ' + size + ' ]"]' ).val();
+      var qty = jQuery( 'input[name="wc_custom_sizes[' + size + ']"]' ).val();
       if( qty ){
         price += data[ size ] * qty / total_qty;
       }
