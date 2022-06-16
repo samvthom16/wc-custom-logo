@@ -38,6 +38,7 @@ jQuery.fn.wc_logo_add = function( options ){
   } );
 };
 
+/*
 jQuery.fn.wc_custom_sizes = function(){
   return this.each( function(){
 
@@ -57,7 +58,7 @@ jQuery.fn.wc_custom_sizes = function(){
 
       //console.log( qty_value );
 
-      wc_set_total_price();
+      WC_PRODUCT_DATA.setTotalPrice();
     }
 
     $table.find('input[type=number]').change( calculateQuantity );
@@ -68,3 +69,4 @@ jQuery.fn.wc_custom_sizes = function(){
 
   } );
 };
+*/

@@ -19,7 +19,10 @@
 
       wp_enqueue_script( 'wc-logo-common', plugins_url( 'assets/js/common.js' , dirname(__FILE__) ), array( 'jquery' ), WC_CUSTOM_LOGO_VERSION );
 
-      wp_enqueue_script( 'wc-logo', plugins_url( 'assets/js/main.js' , dirname(__FILE__) ), array( 'jquery', 'wc-image-uploader', 'wc-logo-common' ), WC_CUSTOM_LOGO_VERSION );
+      wp_enqueue_script( 'wc-custom-logo-frontend', plugins_url( 'assets/js/wc_custom_logo_frontend.js' , dirname(__FILE__) ), array( 'jquery' ), WC_CUSTOM_LOGO_VERSION );
+      wp_enqueue_script( 'wc-product-data', plugins_url( 'assets/js/wc_product_data.js' , dirname(__FILE__) ), array( 'jquery' ), WC_CUSTOM_LOGO_VERSION );
+
+      wp_enqueue_script( 'wc-logo', plugins_url( 'assets/js/main.js' , dirname(__FILE__) ), array( 'jquery', 'wc-image-uploader', 'wc-logo-common', 'wc-custom-logo-frontend', 'wc-product-data' ), WC_CUSTOM_LOGO_VERSION );
       wp_localize_script( 'wc-logo', 'wc_defaults', array(
         'logo_black'  => plugins_url( 'assets/images/logo-placeholder-black.png' , dirname(__FILE__) ),
         'logo_white'  => plugins_url( 'assets/images/logo-placeholder-white.png' , dirname(__FILE__) ),
