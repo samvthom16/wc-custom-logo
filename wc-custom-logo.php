@@ -156,8 +156,8 @@
 
 	function getWCSizesCosts(){
 		return array(
-			'2XL' => 2,
-			'3XL'	=> 3
+			'2XL' => 0,
+			'3XL'	=> 0
 		);
 	}
 

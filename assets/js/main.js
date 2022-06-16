@@ -270,7 +270,7 @@ function wc_set_total_price(){
 
 
   if( total_price ){
-    jQuery( '#product_total_price' ).show();
+    //jQuery( '#product_total_price' ).show();
   }
 }
 
