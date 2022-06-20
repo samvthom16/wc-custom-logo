@@ -13,10 +13,13 @@
   display: inline-block;
 }
 
+.wc-table{
+  margin-bottom: 10px;
+}
+
 .wc-table, .wc-table th, .wc-table td {
   border: 1px solid black !important;
   border-collapse: collapse;
-  margin-bottom: 40px;
 }
 .wc-table th, .wc-table td{
   max-width: 60px;

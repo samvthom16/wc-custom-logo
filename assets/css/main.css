@@ -79,11 +79,13 @@
 
 
 
-
-#product_total_price{
-  display: grid;
-  grid-template-columns: 1fr 220px;
+@media( min-width: 1100px ){
+  #product_total_price{
+    display: grid;
+    grid-template-columns: 1fr 220px;
+  }
 }
+
 
 #product_total_price span{
   font-weight: bold;
@@ -114,15 +116,47 @@
   font-size: 12px;
 }
 #product_total_price ul li{
-  background: #eee;
+  background-color: #eee;
   display: inline-block;
-  padding: 2px 10px;
+  padding: 5px 15px;
   border-radius: 100px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  margin-right: 5px;
 }
 
 #product_total_price .discount-text{
   line-height: 1;
 }
 
+i.tshirt-multiple, i.tshirt-print{
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  position: relative;
+
+}
+i.tshirt-multiple::after, i.tshirt-print::after{
+  position: absolute;
+  top: 3px;
+  left: 0;
+  content: '';
+  background-image: url( '../../assets/images/tshirt-multiple.png' );
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 100%;
+  height: 100%;
+}
+i.tshirt-print::after{
+  background-image: url( '../../assets/images/tshirt-print.png' );
+}
+
 .font-big{ font-size: 18px; }
 .no-margin-bottom{ margin-bottom: 0; line-height: 1;}
+
+.wc-table-container{
+  max-width: 100%;
+  overflow-x: scroll;
+  margin-bottom: 30px;
+}

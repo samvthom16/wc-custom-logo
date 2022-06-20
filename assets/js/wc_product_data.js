@@ -273,11 +273,7 @@ WC_PRODUCT_DATA = {
     }
   },
 
-  /*
-  * MANIPULATES THE OVERALL QUANTITY WHEN
-  * INDIVIDUAL SIZES QUANTITY ARE CHANGED
-  */
-  calculateSizeQuantity: function(){
+  getSizeQuantity: function(){
     var $table  = WC_PRODUCT_DATA.getSizesTableElement();
     var qty_value = 0;
 
@@ -285,6 +281,16 @@ WC_PRODUCT_DATA = {
       var $qty_input = jQuery( this );
       qty_value += parseInt( $qty_input.val() );
     } );
+    return qty_value;
+  },
+
+  /*
+  * MANIPULATES THE OVERALL QUANTITY WHEN
+  * INDIVIDUAL SIZES QUANTITY ARE CHANGED
+  */
+  calculateSizeQuantity: function(){
+
+    var qty_value = WC_PRODUCT_DATA.getSizeQuantity();
 
     if( qty_value < 1 ) qty_value = 1;  // min value of qty should be 1
 
@@ -316,10 +322,11 @@ WC_PRODUCT_DATA = {
     WC_PRODUCT_DATA.insertPrice( 'sale_price', sale_price );
     WC_PRODUCT_DATA.insertPrice( 'total_price', total_price );
 
-    // SET QUANTITY & DISCOUNT
-    WC_PRODUCT_DATA.insertHTML( 'qty', WC_PRODUCT_DATA.getQuantity() );
+    // SET QUANTITY & DISCOUNT & LABEL DESIGNS
+    WC_PRODUCT_DATA.insertHTML( 'qty', WC_PRODUCT_DATA.getSizeQuantity() );
     WC_PRODUCT_DATA.insertHTML( 'discount', WC_PRODUCT_DATA.getDiscount() + '%' );
     WC_PRODUCT_DATA.insertHTML( 'label_designs_no', label_designs_no );
+
 
     // DYNAMIC DISCOUNT BREAKS
     if( discountData.next && discountData.next.length ){
