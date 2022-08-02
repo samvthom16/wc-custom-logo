@@ -40,27 +40,60 @@
       } );
       add_action( 'attachment_fields_to_save', array( $this, 'saveProductDataPanels') );
 
-      // WooCommerce SETTINGS
+      /*
+      * WooCommerce SETTINGS FOR CUSTOM LOGO
+      */
       add_filter( 'woocommerce_settings_tabs_array', __CLASS__ . '::add_settings_tab', 50 );
-      add_action( 'woocommerce_settings_tabs_custom_logo', array( $this, 'settings_tab' ) );
-      add_action( 'woocommerce_update_options_custom_logo', array( $this, 'wc_update_settings' ) );
+      add_action( 'woocommerce_settings_tabs_custom_logo', function(){
+        woocommerce_admin_fields( $this->wc_settings_custom_logo() );
+      } );
+      add_action( 'woocommerce_update_options_custom_logo', function(){
+        woocommerce_update_options( $this->wc_settings_custom_logo() );
+      } );
+      add_action( 'woocommerce_settings_tabs_discount_breaks', function(){
+        woocommerce_admin_fields( $this->wc_settings_discount_breaks() );
+      } );
+      add_action( 'woocommerce_update_options_discount_breaks', function(){
+        woocommerce_update_options( $this->wc_settings_discount_breaks() );
+      } );
 
     }
 
     public static function add_settings_tab( $settings_tabs ) {
         $settings_tabs['custom_logo'] = __( 'Custom Logo', 'woocommerce-settings-custom-logo' );
+        $settings_tabs['discount_breaks'] = __( 'Discount Breaks', 'woocommerce-settings-custom-logo' );
         return $settings_tabs;
     }
 
-    function settings_tab() {
-      woocommerce_admin_fields( $this->wc_get_settings() );
+    function wc_settings_discount_breaks(){
+      $settings = array(
+        'section_title' => array(
+          'name'  => 'Discount Breakpoints',
+          'type'  => 'title',
+          'id'    => 'wc_settings_tab_custom_logo_section_title'
+        )
+      );
+
+      $discount_table = getWCDiscountBreaks();
+      foreach( $discount_table as $key ){
+        $settings[ 'discount_' . $key ] = array(
+          'name' => "Discount for $key",
+          'type' => 'text',
+          'desc' => "Discount percentage for items when the total quantity >= $key",
+          'id'   => "wc_settings_discount[$key]"
+        );
+      }
+
+      $settings[ 'section_end' ] = array(
+        'type'  => 'sectionend',
+        'id'    => 'wc_settings_tab_custom_logo_section_end'
+      );
+
+      return apply_filters( 'wc_settings_tab_discount_breaks_settings', $settings );
     }
 
-    function wc_update_settings(){
-      woocommerce_update_options( $this->wc_get_settings() );
-    }
 
-    function wc_get_settings() {
+    function wc_settings_custom_logo() {
       $settings = array(
         'section_title' => array(
           'name'     => __( 'Custom Logo Settings', 'woocommerce-settings-custom-logo' ),
@@ -68,10 +101,10 @@
           'desc'     => '',
           'id'       => 'wc_settings_tab_custom_logo_section_title'
         ),
-        'title' => array(
+        'remove_bg' => array(
           'name' => __( 'Remove BG API Key', 'woocommerce-settings-custom-logo' ),
           'type' => 'text',
-          'desc' => __( 'API key used for removing background colors from the custom logos', 'woocommerce-settings-tab-demo' ),
+          'desc' => __( 'API key used for removing background colors from the custom logos', 'woocommerce-settings-custom-logo' ),
           'id'   => 'wc_settings_tab_custom_logo_api_key'
         ),
         'section_end' => array(
@@ -79,6 +112,41 @@
           'id'    => 'wc_settings_tab_custom_logo_section_end'
         )
       );
+
+      $settings['section_title1'] = array(
+        'name'  => 'Extra Prices For Sizes',
+        'type'  => 'title',
+      );
+      $sizes = getWCSizes();
+      foreach( $sizes as $size ){
+        $settings[ 'size_' . $size ] = array(
+          'name' => "Cost of $size",
+          'type' => 'text',
+          'desc' => "Additional price for items with sizes $size",
+          'id'   => "wc_settings_size[$size]"
+        );
+      }
+      $settings['section_end1'] = array(
+        'type'  => 'sectionend',
+      );
+
+      $settings['section_title2'] = array(
+        'name'  => 'Extra Prices For Label Placements',
+        'type'  => 'title',
+      );
+      $labels = getWCLabelDesigns();
+      foreach( $labels as $key => $label ){
+        $settings[ 'label_' . $key ] = array(
+          'name' => "Cost of $label",
+          'type' => 'text',
+          'desc' => "Additional price for items with $label placement",
+          'id'   => "wc_settings_labels[$key]"
+        );
+      }
+      $settings['section_end2'] = array(
+        'type'  => 'sectionend',
+      );
+
       return apply_filters( 'wc_settings_tab_custom_logo_settings', $settings );
     }
 

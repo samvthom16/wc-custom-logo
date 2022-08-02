@@ -6,23 +6,16 @@
     <?php echo $option;?>
   </p>
   <?php endforeach;?>
-  <p></p>
 
-  <!--div style="padding: 0 10px;">
-    <h4>Additional price for each size</h4>
-    <table class='wc-table'>
-      <tr>
-        <?php foreach( $sizes as $size ):?>
-          <th><?php echo $size;?></th>
-        <?php endforeach;?>
-      </tr>
-      <tr>
-        <?php foreach( $sizes as $size ): $name = "wc_custom_sizes[ $size ]";?>
-          <td><input type='number' name='<?php echo $name;?>' value='0' step='1' min='0' /></td>
-        <?php endforeach;?>
-      </tr>
-    </table>
-  </div-->
+  <div style='padding-left: 10px;margin-top: 20px;'>
+    <?php
+      $min_qty = isset( $checklist_values['min_qty'] ) && parseInt( $checklist_values['min_qty'] ) ? parseInt( $checklist_values['min_qty'] ) : 6;
+    ?>
+    <div>Minimum Quantity</div>
+    <input style='display: block' type='text' name='wc_custom_settings[min_qty]' value='<?php echo $min_qty;?>' />
+  </div>
+
+
   <p></p>
 
 </div>

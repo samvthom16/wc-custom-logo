@@ -160,3 +160,10 @@ i.tshirt-print::after{
   overflow-x: scroll;
   margin-bottom: 30px;
 }
+
+#min_qty_text{
+  border-left: rgb(255, 136, 0) solid 5px;
+  padding: 5px 10px;
+  background: rgb(255, 136, 0, 0.2);
+  color: #333;
+}

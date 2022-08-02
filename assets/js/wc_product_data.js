@@ -139,12 +139,15 @@ WC_PRODUCT_DATA = {
   */
   getBasePrice: function( product_id ){
     var data = jQuery( 'form.variations_form' ).data( 'product_variations' );
-    for( var i=0; i<data.length; i++ ){
-      var product = data[i];
-      if( product.variation_id == product_id ){
-        return product.display_price;
+    if( data ){
+      for( var i=0; i<data.length; i++ ){
+        var product = data[i];
+        if( product.variation_id == product_id ){
+          return product.display_price;
+        }
       }
     }
+    return parseFloat( jQuery( 'input[name=wc_product_price]' ).val() )
   },
 
   /*
@@ -213,6 +216,10 @@ WC_PRODUCT_DATA = {
   */
   setQuantity: function( qty ){
     WC_PRODUCT_DATA.getQuantityElement().val( qty );
+  },
+
+  getMinimumQty: function(){
+    return jQuery( '[name=wc_min_qty]' ).val()
   },
 
   /*
@@ -310,7 +317,8 @@ WC_PRODUCT_DATA = {
       regular_price      = WC_PRODUCT_DATA.getRegularPrice(),
       sale_price         = WC_PRODUCT_DATA.getSalePrice(),
       estimated_price    = WC_PRODUCT_DATA.getEstimatedPrice(),
-      total_price        = WC_PRODUCT_DATA.getTotalPrice();
+      total_price        = WC_PRODUCT_DATA.getTotalPrice(),
+      quantity           = WC_PRODUCT_DATA.getSizeQuantity();
 
     // SHOW ONLY IF REGULAR PRICE IS MORE THAN THE SALE PRICE
     if( regular_price != sale_price ){
@@ -323,7 +331,7 @@ WC_PRODUCT_DATA = {
     WC_PRODUCT_DATA.insertPrice( 'total_price', total_price );
 
     // SET QUANTITY & DISCOUNT & LABEL DESIGNS
-    WC_PRODUCT_DATA.insertHTML( 'qty', WC_PRODUCT_DATA.getSizeQuantity() );
+    WC_PRODUCT_DATA.insertHTML( 'qty', quantity );
     WC_PRODUCT_DATA.insertHTML( 'discount', WC_PRODUCT_DATA.getDiscount() + '%' );
     WC_PRODUCT_DATA.insertHTML( 'label_designs_no', label_designs_no );
 
@@ -347,9 +355,18 @@ WC_PRODUCT_DATA = {
       WC_PRODUCT_DATA.insertHTML( 'discount-text', buyMoreText );
     }
 
+
+
     // ONLY SHOW THE PRICE BREAKUP IF SOME PRICE IS PRESENT: ENSURE IF THE CALCULATION WAS RIGHT
-    if( total_price ){
+    if( total_price && quantity >= WC_PRODUCT_DATA.getMinimumQty() ){
       jQuery( '#product_total_price' ).show();
+      jQuery( 'button.single_add_to_cart_button' ).show();
+      jQuery( '#min_qty_text').hide();
+    }
+    else{
+      jQuery( '#product_total_price' ).hide();
+      jQuery( 'button.single_add_to_cart_button' ).hide();
+      jQuery( '#min_qty_text').show();
     }
   },
 

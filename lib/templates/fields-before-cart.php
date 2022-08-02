@@ -1,5 +1,6 @@
 <div class="wc-custom-logo-extras">
-
+  <input type='hidden' name='wc_product_price' value='<?php _e( $product->get_price() );?>' />
+  <input type='hidden' name='wc_min_qty' value='<?php _e( $allowed_settings['min_qty'] );?>' />
   <?php if( count( $allowed_label_designs ) ):?>
   <div style='margin:20px 0 40px;'>
     <p>Select one or more placements for your design:</p>
@@ -15,6 +16,11 @@
     </ul>
   </div>
   <?php endif;?>
+
+  <div style='margin-bottom: 30px;'>
+    <label>Custom Text</label>
+    <p><input type='text' name='wc_custom_text' value='' /></p>
+  </div>
 
   <?php if( count( $allowed_sizes ) ):?>
   <div class='wc-table-container'>
@@ -39,7 +45,6 @@
     window.sizes_costs = <?php echo json_encode( getWCSizesCosts() )?>;
   </script>
 
-
   <input type='hidden' name='wc_custom_logo_image_src' value='<?php echo WC()->session->get( 'wc_custom_logo' );?>' />
 
   <div id='product_total_price' style='margin-bottom:20px;' data-currency='<?php echo $currency_symbol;?>'>
@@ -63,5 +68,9 @@
       <p class='no-margin-bottom'><a href='' target='_blank' style='text-decoration: underline;'>Money Saving Tips</a></p>
     </div>
 
+  </div>
+
+  <div id='min_qty_text'>
+    Minimum quantity for this product is <?php echo $allowed_settings['min_qty'];?>
   </div>
 </div>

@@ -109,6 +109,20 @@
 
 
 	function wc_get_label_designs(){
+
+		$labels_titles = getWCLabelDesigns();
+		$labels_cost = get_option( 'wc_settings_labels' );
+
+		$data = array();
+
+		foreach( $labels_titles as $label => $title ){
+			$data[ $label ] = array(
+				'label'	=> $title,
+				'cost'	=> floatval( $labels_cost[ $label ] ) //floatval
+			);
+		}
+		return $data;
+		/*
 		return array(
 			'front' => array(
 				'label' => 'Front',
@@ -123,9 +137,14 @@
 				'cost'	=> 2.5
 			),
 		);
+		*/
 	}
 
 	function wc_get_discounts_table(){
+		$discount_values = get_option( 'wc_settings_discount' );
+		return $discount_values;
+
+		/*
 		return array(
 			'2400' 	=> 70,
 			'1800'	=> 68,
@@ -142,9 +161,24 @@
 			'12'		=> 20,
 			'7'			=> 10
 		);
+		*/
 	}
 
+	function getWCDiscountBreaks(){
+		return array(
+			'2400', '1800', '1500', '1200', '900', '600',
+			'500', '200', '100', '60', '48', '24', '12', '7'
+		);
+	}
 
+	function getWCLabelDesigns(){
+		return array(
+			'front' => 'Front',
+			'back'	=> 'Back',
+			'chest'	=> 'Left Chest',
+			'hat'		=> 'Hat'
+		);
+	}
 
 	function getWCSizes(){
 		return array(
@@ -153,24 +187,20 @@
 	}
 
 	function getWCSizesCosts(){
+		return get_option( 'wc_settings_size' );
+		/*
 		return array(
 			'2XL' => 2,
 			'3XL'	=> 3
 		);
+		*/
 	}
 
 
 
 
-// Add data to cart item
-add_filter( 'woocommerce_add_cart_item_data', 'add_cart_item_data', 25, 2 );
-function add_cart_item_data( $cart_item_data, $product_id ) {
-	$keys = array( 'wc_custom_logo_image_src', 'wc_custom_label_design', 'wc_custom_sizes' );
-	foreach( $keys as $key ){
-		if( isset( $_POST[$key] ) ) $cart_item_data[$key] = $_POST[$key];
-	}
-	return $cart_item_data;
-}
+
+
 
 /*
 add_filter( 'woocommerce_is_sold_individually', function(  $return, $product  ){

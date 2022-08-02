@@ -11,6 +11,22 @@ class WC_CUSTOM_CART extends WC_BASE{
 
     // Display custom data on cart and checkout page.
     add_filter( 'woocommerce_get_item_data', array( $this, 'get_wc_cart_item_data' ), 25, 2 );
+
+    // Add data to cart item
+    add_filter( 'woocommerce_add_cart_item_data', array( $this, 'add_cart_item_data' ), 25, 2 );
+  }
+
+  function add_cart_item_data( $cart_item_data, $product_id ) {
+  	$keys = array(
+      'wc_custom_logo_image_src',
+      'wc_custom_label_design',
+      'wc_custom_sizes',
+      'wc_custom_text'
+    );
+  	foreach( $keys as $key ){
+  		if( isset( $_POST[$key] ) ) $cart_item_data[$key] = $_POST[$key];
+  	}
+  	return $cart_item_data;
   }
 
   function get_wc_cart_item_data ( $cart_data, $cart_item ) {
@@ -60,28 +76,23 @@ class WC_CUSTOM_CART extends WC_BASE{
     }
 
 
-
-
-
-  	$key = 'wc_custom_logo_image_src';
-
-  	$image_id = ( isset( $cart_item['data'] ) && isset( $cart_item['data']->get_data()['image_id'] ) ) ? $cart_item['data']->get_data()['image_id'] : 0;
-
-  	if( !empty( $cart_item[ $key ] ) && $image_id ){
-  		?>
-  		<!--style>
-  			.woocommerce-cart .product-thumbnail .wc-custom-logo-product-parent-<?php _e( $image_id )?>::after{
-  				background-image: url('<?php _e( $cart_item[ $key ] );?>') !important;
-  			}
-  		</style-->
+    $key = 'wc_custom_logo_image_src';
+    $image_id = ( isset( $cart_item['data'] ) && isset( $cart_item['data']->get_data()['image_id'] ) ) ? $cart_item['data']->get_data()['image_id'] : 0;
+    if( !empty( $cart_item[ $key ] ) && $image_id ):?>
   		<p style='margin-top: 20px; text-decoration: underline; font-size:small;'>
         <a data-resize='1' data-rel='prettyPhoto' href='<?php echo $cart_item[ $key ];?>'>With Custom Logo</a>
       <p>
+    <?php endif;
 
-  		<?php
 
-  	}
-  	return $cart_data;
+    if( isset( $cart_item[ 'wc_custom_text' ] ) && !empty( $cart_item[ 'wc_custom_text' ] ) ){
+      $cart_data[] = array(
+        'name'  => 'Custom Text',
+        'value' => $cart_item['wc_custom_text']
+      );
+    }
+
+    return $cart_data;
   }
 
   function getAvailableDiscount( $quantity ){
