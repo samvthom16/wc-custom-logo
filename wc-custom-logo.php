@@ -121,6 +121,7 @@
 				'cost'	=> floatval( $labels_cost[ $label ] ) //floatval
 			);
 		}
+
 		return $data;
 		/*
 		return array(
@@ -173,10 +174,12 @@
 
 	function getWCLabelDesigns(){
 		return array(
-			'front' => 'Front',
-			'back'	=> 'Back',
-			'chest'	=> 'Left Chest',
-			'hat'		=> 'Hat'
+			'front' 						=> 'Front',
+			'back'							=> 'Back',
+			'chest'							=> 'Left Chest',
+			'embroidery-chest'	=> 'Embroidery left chest',
+			'hat'								=> 'Hat Embroidery Front',
+			'custom'						=> 'Custom Text'
 		);
 	}
 

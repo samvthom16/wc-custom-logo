@@ -127,11 +127,21 @@ WC_PRODUCT_DATA = {
       var value = jQuery( this ).val();
       if( value == 'front' ){
         jQuery( WC_PRODUCT_DATA.getLabelDesignQuery() + '[value=chest]' ).attr( 'disabled', true );
+        jQuery( WC_PRODUCT_DATA.getLabelDesignQuery() + '[value=embroidery-chest]' ).attr( 'disabled', true );
       }
-      if( value == 'chest' ){
+      if( value == 'chest' || value == 'embroidery-chest' ){
         jQuery( WC_PRODUCT_DATA.getLabelDesignQuery() + '[value=front]' ).attr( 'disabled', true );
       }
     } );
+
+    if( jQuery( WC_PRODUCT_DATA.getLabelDesignQuery() + '[value=custom]:checked' ).length ){
+      jQuery( '#custom-text-container' ).show();
+    }
+    else{
+      jQuery( '#custom-text-container' ).hide();
+    }
+
+
   },
 
   /*
@@ -368,6 +378,9 @@ WC_PRODUCT_DATA = {
       jQuery( 'button.single_add_to_cart_button' ).hide();
       jQuery( '#min_qty_text').show();
     }
+
+
+
   },
 
   /*
@@ -397,6 +410,9 @@ WC_PRODUCT_DATA = {
 
     // HIDE TOTAL PRODUCT PRICE FOR THE INITAL TIME
     jQuery( '#product_total_price' ).hide();
+
+    // HIDE CUSTOM TEXT CONTAINER FOR THE FIRST TIME
+    jQuery( '#custom-text-container' ).hide();
   }
 
 }

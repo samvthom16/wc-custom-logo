@@ -135,6 +135,7 @@
         'type'  => 'title',
       );
       $labels = getWCLabelDesigns();
+
       foreach( $labels as $key => $label ){
         $settings[ 'label_' . $key ] = array(
           'name' => "Cost of $label",
@@ -221,14 +222,16 @@
 
       $options = array(
         'discount'  => 'Discount breakpoints',
-        'front'     => 'Front logo design',
-        'back'      => 'Back logo design',
-        'chest'     => 'Left-chest logo design',
       );
 
       $sizes = getWCSizes();
       foreach( $sizes as $size ){
         $options[ $size ] = 'Size: ' . $size;
+      }
+
+      $labels_titles = getWCLabelDesigns();
+      foreach( $labels_titles as $slug => $label_title ){
+        $options[ $slug ] = 'Logo placement: ' . $label_title;
       }
 
       include( 'templates/product-data-settings.php' );

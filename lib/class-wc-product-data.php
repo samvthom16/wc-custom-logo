@@ -25,7 +25,7 @@ class WC_PRODUCT_DATA extends WC_BASE{
 
 		// LABEL DESIGNS
 		$label_designs = wc_get_label_designs();
-		$allowed_label_designs = array();
+    $allowed_label_designs = array();
 
     // SIZES
 		$sizes = getWCSizes();
@@ -42,7 +42,7 @@ class WC_PRODUCT_DATA extends WC_BASE{
 			}
 		}
 
-		//print_r( $allowed_sizes );
+    //print_r( $allowed_sizes );
 
     include( 'templates/fields-before-cart.php' );
 

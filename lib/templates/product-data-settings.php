@@ -9,7 +9,7 @@
 
   <div style='padding-left: 10px;margin-top: 20px;'>
     <?php
-      $min_qty = isset( $checklist_values['min_qty'] ) && parseInt( $checklist_values['min_qty'] ) ? parseInt( $checklist_values['min_qty'] ) : 6;
+      $min_qty = isset( $checklist_values['min_qty'] ) && intval( $checklist_values['min_qty'] ) ? intval( $checklist_values['min_qty'] ) : 6;
     ?>
     <div>Minimum Quantity</div>
     <input style='display: block' type='text' name='wc_custom_settings[min_qty]' value='<?php echo $min_qty;?>' />

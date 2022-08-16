@@ -17,7 +17,7 @@
   </div>
   <?php endif;?>
 
-  <div style='margin-bottom: 30px;'>
+  <div id='custom-text-container' style='margin-bottom: 30px;'>
     <label>Custom Text</label>
     <p><input type='text' name='wc_custom_text' value='' /></p>
   </div>
