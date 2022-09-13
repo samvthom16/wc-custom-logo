@@ -177,8 +177,9 @@
 			'front' 						=> 'Front',
 			'back'							=> 'Back',
 			'chest'							=> 'Left Chest',
-			'embroidery-chest'	=> 'Embroidery left chest',
+			'embroidery-chest'	=> 'Embroidery Left Chest',
 			'hat'								=> 'Hat Embroidery Front',
+			'embroidery-right'	=> 'Embroidery Right Sleeve',
 			'custom'						=> 'Custom Text'
 		);
 	}

@@ -1,4 +1,5 @@
 <div class="wc-custom-logo-extras">
+  <p>Click <a href='https://beepro.us/upload-logo/'>here</a> if you haven't uploaded your design</p>
   <input type='hidden' name='wc_product_price' value='<?php _e( $product->get_price() );?>' />
   <input type='hidden' name='wc_min_qty' value='<?php _e( $allowed_settings['min_qty'] );?>' />
   <?php if( count( $allowed_label_designs ) ):?>
@@ -9,7 +10,7 @@
       <li>
         <label>
           <input type='checkbox' name='wc_custom_label_design[]' value='<?php echo $slug;?>' />
-          <span><?php _e( $label_design['label'] );?>&nbsp;<?php _e( '(+ $' .number_format( (float)$label_design['cost'], 2, '.', '') . ')' );?></span>
+          <span><?php _e( $label_design['label'] );?>&nbsp;<?php /*_e( '(+ $' .number_format( (float)$label_design['cost'], 2, '.', '') . ')' );*/ ?></span>
         </label>
       </li>
     <?php endforeach;?>
