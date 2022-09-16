@@ -19,7 +19,7 @@
   <?php endif;?>
 
   <div id='custom-text-container' style='margin-bottom: 30px;'>
-    <label>Custom Text</label>
+    <label>Enter Company Name & Phone Number / Last Name & Number</label>
     <p><input type='text' name='wc_custom_text' value='' /></p>
   </div>
 

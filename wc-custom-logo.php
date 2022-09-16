@@ -184,7 +184,7 @@
 			'embroidery-chest'	=> 'Embroidery Left Chest',
 			'hat'								=> 'Hat Embroidery Front',
 			'embroidery-right'	=> 'Embroidery Right Sleeve',
-			'custom'						=> 'Custom Text'
+			'custom'						=> 'Enter Company Name & Phone Number / Last Name & Number'
 		);
 	}
 
