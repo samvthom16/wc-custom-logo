@@ -1,5 +1,5 @@
 <div class="wc-custom-logo-extras">
-  <p>Click <a href='https://beepro.us/upload-logo/'>here</a> if you haven't uploaded your design</p>
+  <!--p>Click <a href='https://beepro.us/upload-logo/'>here</a> if you haven't uploaded your design</p-->
   <input type='hidden' name='wc_product_price' value='<?php _e( $product->get_price() );?>' />
   <input type='hidden' name='wc_min_qty' value='<?php _e( $allowed_settings['min_qty'] );?>' />
   <?php if( count( $allowed_label_designs ) ):?>
