@@ -33,6 +33,10 @@
 		require_once( $inc_file );
   }
 
+	add_action( 'woocommerce_single_product_summary', function () {
+		echo "<p style='font-size: 18px; font-weight: bold;'>Click <a style='text-decoration:underline;color:rgb(255, 136, 0);' href='https://beepro.us/upload-logo/'>here</a> if you haven't uploaded your design</p>";
+	} );
+
 	function wc_custom_logo_removebg(){
 		if( isset( $_GET[ 'img' ] ) ){
 			$util = \WC_CUSTOM_LOGO\IMAGE_UTIL::getInstance();
