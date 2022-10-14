@@ -15,6 +15,11 @@ class WC_PRODUCT_DATA extends WC_BASE{
     return $admin->getSettings( $product_id );
   }
 
+  function getCustomDiscountBreaks( $product_id ){
+    $admin = new WC_CUSTOM_LOGO_ADMIN;
+    return $admin->getCustomDiscountBreaks( $product_id );
+  }
+
   function addFieldsBeforeCart(){
     global $product;
 
@@ -22,6 +27,7 @@ class WC_PRODUCT_DATA extends WC_BASE{
 
 		// OVERALL SETTINGS FOR THE PRODUCTS
 		$allowed_settings = $this->getSettings( $product->id );
+    $discount_break_values = $this->getCustomDiscountBreaks( $product->id );
 
 		// LABEL DESIGNS
 		$label_designs = wc_get_label_designs();

@@ -42,7 +42,7 @@
 
   <script>
     window.label_designs = <?php echo json_encode( $label_designs );?>;
-    window.discounts = <?php echo json_encode( wc_get_discounts_table() )?>;
+    window.discounts = <?php echo json_encode( $discount_break_values )?>;
     window.sizes_costs = <?php echo json_encode( getWCSizesCosts() )?>;
   </script>
 

@@ -19,3 +19,12 @@
   <p></p>
 
 </div>
+<div id="wc_custom_logo_discount" class="panel woocommerce_options_panel hidden">
+  <?php //print_r( $discount_break_values );?>
+  <?php foreach( $discount_breaks as $discount_key ):?>
+  <p class='form-field'>
+    <label><?php _e( "Discount for $discount_key" );?></label>
+    <input type='number' class='short wc_input_price' name='wc_custom_discount_breaks[<?php echo $discount_key;?>]' value='<?php echo $discount_break_values[ $discount_key ];?>' />
+  </p>
+  <?php endforeach;?>
+</div>

@@ -145,6 +145,11 @@
 		*/
 	}
 
+	function wc_get_global_discounts_table(){
+		return get_option( 'wc_settings_discount' );
+	}
+
+	/*
 	function wc_get_discounts_table(){
 		$discount_values = get_option( 'wc_settings_discount' );
 		return $discount_values;
@@ -166,8 +171,9 @@
 			'12'		=> 20,
 			'7'			=> 10
 		);
-		*/
+		*
 	}
+	*/
 
 	function getWCDiscountBreaks(){
 		return array(

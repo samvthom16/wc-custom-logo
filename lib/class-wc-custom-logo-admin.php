@@ -20,22 +20,35 @@
       * SAVE PRODUCT PANEL DATA
       */
       add_filter( 'woocommerce_product_data_tabs',  function( $tabs ){
+
         $tabs['wc_custom_logo'] = array(
-		      'label'    => 'Settings',
+		      'label'    => 'Customise',
 		      'target'   => 'misha_product_data',
 		      'class'    => array(),
 		      'priority' => 21,
 	       );
+
+         $tabs['wc_custom_logo_discount'] = array(
+ 		      'label'    => 'Discount',
+ 		      'target'   => 'wc_custom_logo_discount',
+ 		      'class'    => array(),
+ 		      'priority' => 21,
+ 	       );
 	       return $tabs;
       } );
       add_action( 'woocommerce_product_data_panels', array( $this, 'showProductPanels' ) );
-      add_action('woocommerce_process_product_meta', function(){
+      add_action( 'woocommerce_process_product_meta', function(){
 
         $checklist = array();
         if( isset( $_POST[ 'wc_custom_settings' ] ) ){
           $checklist = $_POST[ 'wc_custom_settings' ];
         }
         update_post_meta( get_the_ID(), 'wc_custom_settings', $checklist );
+
+        // DISCOUNT BREAKS
+        if( isset( $_POST[ 'wc_custom_discount_breaks' ] ) ){
+          update_post_meta( get_the_ID(), 'wc_custom_discount_breaks', $_POST[ 'wc_custom_discount_breaks' ] );
+        }
 
       } );
       add_action( 'attachment_fields_to_save', array( $this, 'saveProductDataPanels') );
@@ -216,6 +229,12 @@
       return $checklist_values;
     }
 
+    function getCustomDiscountBreaks( $product_id ){
+      $discount_breaks = get_post_meta( $product_id, 'wc_custom_discount_breaks', true );
+      if( !$discount_breaks ) $discount_breaks = wc_get_global_discounts_table();
+      return $discount_breaks;
+    }
+
     function showProductPanels(){
 
       $checklist_values = $this->getSettings( get_the_ID() );
@@ -233,6 +252,9 @@
       foreach( $labels_titles as $slug => $label_title ){
         $options[ $slug ] = 'Logo placement: ' . $label_title;
       }
+
+      $discount_break_values = $this->getCustomDiscountBreaks( get_the_ID() );
+      $discount_breaks = getWCDiscountBreaks();
 
       include( 'templates/product-data-settings.php' );
 

@@ -1,5 +1,13 @@
 #woocommerce-product-data ul.wc-tabs li.misha_options.misha_tab a:before{ content: "\f100"; }
 
+#woocommerce-product-data ul.product_data_tabs li.wc_custom_logo_tab a:before{
+  content: "\f100";
+}
+
+#woocommerce-product-data ul.product_data_tabs li.wc_custom_logo_discount_tab a:before{
+  content: "\f18e";
+}
+
 [data-behaviour~=wc-logo-customize]{
   text-align: center;
   position: relative;

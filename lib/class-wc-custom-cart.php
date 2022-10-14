@@ -67,7 +67,7 @@ class WC_CUSTOM_CART extends WC_BASE{
 
 
     // SHOW IF THERE IS A DISCOUNT AVAILABLE
-    $avail_discount = $this->getAvailableDiscount( $cart_item['quantity'] );
+    $avail_discount = $this->getAvailableDiscount( $cart_item['product_id'], $cart_item['quantity'] );
     if( $avail_discount ){
       $cart_data[] = array(
     		'name' 	=> 'Discount',
@@ -95,8 +95,9 @@ class WC_CUSTOM_CART extends WC_BASE{
     return $cart_data;
   }
 
-  function getAvailableDiscount( $quantity ){
-    $discount_table = wc_get_discounts_table();
+  function getAvailableDiscount( $product_id, $quantity ){
+    $discount_table = WC_PRODUCT_DATA::getCustomDiscountBreaks( $product_id );
+    //$discount_table = wc_get_global_discounts_table();
     $avail_discount = 0;
     foreach( $discount_table as $min => $discount ){
       if( $quantity >= $min ){
@@ -144,7 +145,8 @@ class WC_CUSTOM_CART extends WC_BASE{
       }
 
       // APPLY AVAILABLE DISCOUNT FROM THE TABLE
-  		$avail_discount = $this->getAvailableDiscount( $value['quantity'] );
+      //print_r(  );
+  		$avail_discount = $this->getAvailableDiscount( $value['product_id'], $value['quantity'] );
       $price = $value['data']->get_price();
   		$value['data']->set_price( $price - ( $price * $avail_discount/100 ) );
 
