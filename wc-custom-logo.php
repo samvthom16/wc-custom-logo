@@ -196,7 +196,9 @@
 
 	function getWCSizes(){
 		return array(
-			'YS', 'YM', 'YL', 'YXL', 'S', 'M', 'L', 'XL', '2XL', '3XL'
+			'ONE SIZE', '2T', '3T', '4T', 'XS', 'YS', 'YM', 'YL', 'YXL', 'S', 'S/M', 'M',
+			'L', 'L/XL', '2XL', '3XL', '4XL', '5XL'
+			//'YS', 'YM', 'YL', 'YXL', 'S', 'M', 'L', 'XL', '2XL', '3XL'
 		);
 	}
 
